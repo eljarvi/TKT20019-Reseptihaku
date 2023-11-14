@@ -22,10 +22,10 @@ CREATE TABLE Ingredients (
     essential BOOLEAN
 );
 
-CREATE TABLE Instuctions (
+CREATE TABLE Instructions (
     id SERIAL PRIMARY KEY,
     recipe_id INT REFERENCES Recipes,
-    instuction TEXT
+    instruction TEXT
 );
 
 CREATE TABLE Reviews (

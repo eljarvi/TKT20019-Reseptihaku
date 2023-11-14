@@ -1,0 +1,18 @@
+<h3>Lisää uusi resepti</h3>
+<form action = "/addrecipe" method = "post">
+Nimi: <input type = "text" name = "name" minlength="1" maxlength="50">
+Valmistusaika (min): <input type = "number" name = "time"><br>
+Kuvaus: <input type = "text" name = "description" maxlength="100"><br>
+Raaka-aineet:<br>
+<textarea name = "ingredients" rows = "10", cols = "40", maxlength="1000">
+porkkana;2
+juusto: 100g
+</textarea><br>
+
+Ohje reseptin valmistukseen:<br>
+<textarea name = "instructions" rows = "5", cols = "40" maxlength="1000"></textarea><br>
+
+Yksityinen: <input type = "checkbox", name = "privacy" value = "1" checked>
+<input type="submit" value = "Lisää resepti">
+<input type = "hidden" name = "user_id" value = "{{session['user_id']}}">
+</form>
