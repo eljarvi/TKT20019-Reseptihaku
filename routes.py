@@ -57,5 +57,19 @@ def addrecipe():
     
         return redirect("/myrecipes/"+str(user))
 
+@app.route("/recipe/<int:recipe_id>", methods = ["get"])
+def recipe(recipe_id):
+    if request.method == "GET":
+        recipeinfo = recipes.recipe_properties(recipe_id)
+        name = recipeinfo[2]
+        desc = recipeinfo[3]
+        time = recipeinfo[4]
+        ingr = recipes.recipe_ingredients(recipe_id)
+        inst= recipes.recipe_instructions(recipe_id)
+        return render_template("recipe.html", name = name, description = desc, time = time, ingredients =ingr, instruction = inst)
+
+
+
+
 
 

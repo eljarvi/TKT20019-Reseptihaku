@@ -6,8 +6,8 @@ def add_recipe(user_id, name, desc, time, priv, ingr, inst):
             VALUES (:user_id, :name, :desc, :time, :priv) RETURNING id"
     recipe_id = db.session.execute(text(sql), {"user_id": user_id, "name":name, "desc":desc, "time": time, "priv": priv}).fetchone()[0]
     for ingredient in ingr.strip().split("\n"):
-        parts = ingredient.strip().split(";")
-        add_ingredient(recipe_id, parts[0], parts[1])
+        parts = ingredient.split(";")
+        add_ingredient(recipe_id, parts[0].strip(), parts[1].strip())
     add_instructions(recipe_id, inst)
     db.session.commit()
 
@@ -24,7 +24,7 @@ def add_ingredient(recipe_id, name, quantity, essential= True):
     db.session.commit()
 
 def recipe_properties(recipe_id):
-    sql = "SELECT user_id, name, description, time, privacy FROM Recipes WHERE id = :recipe_id"
+    sql = "SELECT id, user_id, name, description, time, privacy FROM Recipes WHERE id = :recipe_id"
     return db.session.execute(text(sql), {"recipe_id": recipe_id}).fetchone()
 
 def recipe_ingredients(recipe_id, essential = False):
@@ -36,7 +36,7 @@ def recipe_ingredients(recipe_id, essential = False):
 
 def recipe_instructions(recipe_id):
     sql = "SELECT instruction FROM Instructions WHERE recipe_id = :recipe_id"
-    return db.session.execute(text(sql), {"recipe_id": recipe_id}).fetchone()
+    return db.session.execute(text(sql), {"recipe_id": recipe_id}).fetchone()[0]
 
 def users_recipes(user_id):
     sql = "SELECT id FROM Recipes WHERE user_id = :user_id"

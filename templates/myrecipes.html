@@ -2,7 +2,7 @@
 <a href="/addrecipe">Lisää resepti</a><br>
 Reseptisi:
 {% for recipe in recipes %}
-{{recipe[1]}}<br>
+<a href="/recipe/{{recipe[0]}}">{{recipe[2]}}</a><br>
 {% endfor %}
 
 

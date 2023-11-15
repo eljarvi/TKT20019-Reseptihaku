@@ -1,0 +1,11 @@
+<h2>{{name}}</h2>
+<p>{{description}}</p><br>
+Valmistusaika: {{time}} min<br>
+<h4>Raaka-aineet:</h4>
+<ul>
+{% for ingredient in ingredients %}
+<li>{{ingredient[0]}}  ({{ingredient[1]}})</li>
+{% endfor %}
+</ul>
+
+<p>{{instruction}}</p>
