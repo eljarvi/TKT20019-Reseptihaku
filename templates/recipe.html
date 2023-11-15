@@ -9,3 +9,11 @@ Valmistusaika: {{time}} min<br>
 </ul>
 
 <p>{{instruction}}</p>
+
+{% if session["user_id"] == owner_id%}
+<form action="/delete" method = "post">
+<input type = "hidden" name = "recipe_id" value = "{{id}}">
+<input type="hidden" name = "user_id" value = "{{session['user_id']}}">
+<input type="submit" value = "Poista">
+</form>
+{% endif %}

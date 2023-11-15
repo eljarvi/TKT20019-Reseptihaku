@@ -47,6 +47,8 @@ def addrecipe():
     if request.method == "POST":
         name = request.form["name"]
         time = request.form["time"]
+        if not time.isdigit():
+            time = -1
         desc = request.form["description"]
         ingr = request.form["ingredients"]
         inst = request.form["instructions"]
@@ -61,12 +63,21 @@ def addrecipe():
 def recipe(recipe_id):
     if request.method == "GET":
         recipeinfo = recipes.recipe_properties(recipe_id)
-        name = recipeinfo[2]
-        desc = recipeinfo[3]
-        time = recipeinfo[4]
+        if recipeinfo[4] == -1: 
+            time = "-"
+        else:
+            time = recipeinfo[4] 
         ingr = recipes.recipe_ingredients(recipe_id)
         inst= recipes.recipe_instructions(recipe_id)
-        return render_template("recipe.html", name = name, description = desc, time = time, ingredients =ingr, instruction = inst)
+        return render_template("recipe.html", id = recipe_id, owner_id = recipeinfo[1], name = recipeinfo[2], description = recipeinfo[3], time = time, ingredients =ingr, instruction = inst)
+
+@app.route("/delete", methods = ["post"])
+def delete():
+    if request.method == "POST":
+        user_id = request.form["user_id"]
+        recipe_id = request.form["recipe_id"]
+        recipes.remove_recipe(recipe_id)
+        return redirect("/myrecipes/"+user_id)
 
 
 

@@ -11,7 +11,8 @@ CREATE TABLE Recipes (
     name TEXT,
     description TEXT,
     time INT,
-    privacy BOOLEAN
+    privacy BOOLEAN,
+    visible BOOLEAN
 );
 
 CREATE TABLE Ingredients (
@@ -19,13 +20,15 @@ CREATE TABLE Ingredients (
     recipe_id INT REFERENCES Recipes,
     name TEXT,
     quantity TEXT,
-    essential BOOLEAN
+    essential BOOLEAN,
+    visible BOOLEAN
 );
 
 CREATE TABLE Instructions (
     id SERIAL PRIMARY KEY,
     recipe_id INT REFERENCES Recipes,
-    instruction TEXT
+    instruction TEXT,
+    visible BOOLEAN
 );
 
 CREATE TABLE Reviews (
@@ -33,5 +36,6 @@ CREATE TABLE Reviews (
     user_id INT REFERENCES Users,
     recipe_id INT REFERENCES Recipes,
     review TEXT,
-    grade INT
+    grade INT,
+    visible BOOLEAN
 );
