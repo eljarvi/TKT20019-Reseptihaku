@@ -20,7 +20,6 @@ CREATE TABLE Ingredients (
     recipe_id INT REFERENCES Recipes,
     name TEXT,
     quantity TEXT,
-    essential BOOLEAN,
     visible BOOLEAN
 );
 

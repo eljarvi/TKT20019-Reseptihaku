@@ -1,6 +1,6 @@
 <h2>Omat reseptit</h2>
 <a href="/addrecipe">Lisää resepti</a><br>
-Reseptisi:
+Reseptisi:<br>
 {% for recipe in recipes %}
 <a href="/recipe/{{recipe[0]}}">{{recipe[2]}}</a><br>
 {% endfor %}

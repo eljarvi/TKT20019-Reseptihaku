@@ -16,4 +16,11 @@ Valmistusaika: {{time}} min<br>
 <input type="hidden" name = "user_id" value = "{{session['user_id']}}">
 <input type="submit" value = "Poista">
 </form>
+
+<form action="/modify" method="post">
+<input type = "hidden" name = "recipe_id" value = "{{id}}">
+<input type = "hidden" name = "user_id" value = "{{session['user_id']}}">
+<input type="submit" value = "Muokkaa">
+</form>
+
 {% endif %}

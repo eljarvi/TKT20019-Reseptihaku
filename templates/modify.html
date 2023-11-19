@@ -1,0 +1,29 @@
+<h2>Muokkaa reseptiä: {{name}}</h2>
+<form action="/savechanges" method="post">
+Uusi nimi:<input type="text" name = "name", minlength="1", maxlength="50"><br>
+Valmistusaika:<input type="number" name = "time"> min<br>
+Kuvaus:<input type="text" name = "description", maxlength="100"><br>
+
+Lisää raaka-aineita:<br>
+<textarea name = "ingredients" rows = "8", cols = "30", maxlength="1000">
+porkkana;2 kpl
+</textarea><br>
+
+Poista raaka-aine:<br>
+<p>
+{% for ingredient in ingredients%}
+<input type="checkbox" name = "removed" value = "{{ingredient[2]}}">{{ingredient[0]}}({{ingredient[1]}})
+{% endfor %}
+</p>
+
+Muuta ohjeita:<br>
+<textarea name = "instructions" rows = "5", cols = "40" maxlength="1000">
+{{instructions}} 
+</textarea><br>
+
+<input type = "radio" name = "privacy" value="true"> Yksityinen
+<input type="radio" name = "privacy" value="false"> Julkinen
+
+<input type = "hidden" name = "recipe_id" value = "{{id}}">
+<input type="submit" value="Tallenna">
+</form>

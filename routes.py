@@ -79,6 +79,39 @@ def delete():
         recipes.remove_recipe(recipe_id)
         return redirect("/myrecipes/"+user_id)
 
+@app.route("/modify", methods = ["post"])
+def modify():
+    if request.method == "POST":
+        user_id = request.form["user_id"]
+        id = request.form["recipe_id"]
+        recipeinfo = recipes.recipe_properties(id)
+        ingr = recipes.recipe_ingredients(id)
+        inst = recipes.recipe_instructions(id)
+        return render_template("modify.html", id = id, name = recipeinfo[2], desc=recipeinfo[3], time = recipeinfo[4], priv = recipeinfo[5], ingredients = ingr, instructions = inst)
+
+@app.route("/savechanges", methods = ["post"])
+def savechanges():
+    if request.method == "POST":
+        recipe_id = request.form["recipe_id"]
+        new_name = request.form["name"].strip()
+
+        new_desc = request.form["description"].strip()
+        new_time = request.form["time"]
+        if not new_time.isdigit():
+            new_time = -1
+        new_priv = request.form["privacy"]
+        recipes.change_recipe_properties(recipe_id, new_name, new_desc, new_time, new_priv)
+        new_inst = request.form["instructions"]
+        recipes.change_recipe_instructions(recipe_id, new_inst)
+        new_ings = request.form["ingredients"].strip().split("\n")
+        for ing in new_ings:
+            parts = ing.split(";")
+            if len(parts) == 2:
+                recipes.add_ingredient(recipe_id, parts[0].strip(), parts[1].strip())
+        
+    return redirect("/recipe/"+recipe_id)
+
+
 
 
 
