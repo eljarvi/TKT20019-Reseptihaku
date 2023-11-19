@@ -19,15 +19,15 @@ Tällä hetkellä:
 Ohje käynnistämiseen paikallisesti:
 Kopio tämä repositorio koneellesi ja siirry sen juurikansioon. Luo kansioon .env-niminen tiedosto ja määritä sen sisältö seuraavanalaiseksi: 
 
-DATABASE_URL=<tietokannan-paikallinen-osoite>
+DATABASE_URL= tietokannan-paikallinen-osoite
 
-Seuraavaksi aktivoi virtuaaliympäristö ja asenna sovelluksen riippuvuudet komennoilla
-$ python3 -m venv venv
-$ source venv/bin/activate
-$ pip install -r ./requirements.txt
+Seuraavaksi aktivoi virtuaaliympäristö ja asenna sovelluksen riippuvuudet komennoilla:
+- $ python3 -m venv venv
+- $ source venv/bin/activate
+- $ pip install -r ./requirements.txt
 
-Määritä vielä tietokannan skeema komennolla
-$ psql < schema.sql
+Määritä vielä tietokannan skeema komennolla:
+- $ psql < schema.sql
 
-Nyt voit käynnistää sovelluksen komennolla
-$ flask run
+Nyt voit käynnistää sovelluksen komennolla:
+- $ flask run
