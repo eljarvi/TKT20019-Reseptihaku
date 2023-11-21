@@ -1,14 +1,16 @@
 from db import db
-from flask import session
+from flask import abort, session
 from sqlalchemy.sql import text
+from werkzeug.security import check_password_hash, generate_password_hash
 
 # TODO: improve security
 
 def register(username, password, admin=False):
     try:
+        hash_value = generate_password_hash(password)
         sql = "INSERT INTO Users (username, password, admin) VALUES \
-                (:username, :password, :admin)"
-        db.session.execute(text(sql), {"username":username, "password":password, "admin": admin})
+                (:username, :hash_value, :admin)"
+        db.session.execute(text(sql), {"username":username, "hash_value": hash_value, "admin": admin})
         db.session.commit()
     except:
         return False
@@ -19,7 +21,7 @@ def login(username, password):
     user = db.session.execute(text(sql), {"username":username}).fetchone()
     if not user:
         return False
-    if password != user[1]:
+    if not check_password_hash(user[1], password):
         return False
     session["username"] = username
     session["user_id"] = user[0]
@@ -30,4 +32,12 @@ def logout():
     del session["username"]
     del session["user_id"]
     del session["user_admin"]
+
+def check_user(id):
+    if not "user_id" in session:
+        abort(403)
+        return
+    if id != session["user_id"]:
+        abort(403)
+
 

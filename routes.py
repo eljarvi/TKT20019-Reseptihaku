@@ -37,6 +37,7 @@ def logout():
 
 @app.route("/myrecipes/<int:user_id>")
 def myrecipes(user_id):
+    users.check_user(user_id)
     recipesinfo = [recipes.recipe_properties(x) for x in recipes.users_recipes(user_id)]
     return render_template("myrecipes.html", recipes = recipesinfo)
 
