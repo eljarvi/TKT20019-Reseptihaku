@@ -2,7 +2,6 @@ from db import db
 from sqlalchemy.sql import text
 
 
-#TODO: change this function so that it does not call functions add_ingredient() and add_instructions() so that everything is done in the same session
 def add_recipe(user_id, name, desc, time, priv, ingr, inst):
     sql = "INSERT INTO Recipes (user_id, name, description, time, privacy, visible) \
             VALUES (:user_id, :name, :desc, :time, :priv, true) RETURNING id"
@@ -13,11 +12,9 @@ def add_recipe(user_id, name, desc, time, priv, ingr, inst):
             VALUES (:recipe_id, :name, :quantity, true)"
         db.session.execute(text(sql), {"recipe_id": recipe_id, "name": parts[0].strip(), "quantity": parts[1].strip()})
     add_instructions(recipe_id, inst)
-
-def add_instructions(recipe_id, instruction):
     sql = "INSERT INTO Instructions (recipe_id, instruction, visible) \
             VALUES (:recipe_id, :instruction, true)"
-    db.session.execute(text(sql), {"recipe_id": recipe_id, "instruction": instruction})
+    db.session.execute(text(sql), {"recipe_id": recipe_id, "instruction": inst})
     db.session.commit()
 
 def add_ingredient(recipe_id, name, quantity):
@@ -43,11 +40,9 @@ def users_recipes(user_id):
     result = db.session.execute(text(sql), {"user_id": user_id}).fetchall()
     return [x[0] for x in result]
 
-
 def all_recipes():
     sql = "SELECT id FROM Recipes WHERE privacy = FALSE AND visible"
     return db.session.execute(text(sql)).fetchall()
-
 
 def remove_recipe(recipe_id):
     sql = "UPDATE Recipes SET visible = FALSE WHERE id = :recipe_id"

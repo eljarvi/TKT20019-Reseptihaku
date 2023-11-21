@@ -43,6 +43,7 @@ def myrecipes(user_id):
 
 @app.route("/addrecipe", methods = ["post", "get"])
 def addrecipe():
+    users.require_login()
     if request.method == "GET":
         return render_template("addrecipe.html")
     if request.method == "POST":
@@ -62,9 +63,10 @@ def addrecipe():
 
 @app.route("/recipe/<int:recipe_id>", methods = ["get"])
 def recipe(recipe_id):
-    print(recipe_id)
     if request.method == "GET":
         recipeinfo = recipes.recipe_properties(recipe_id)
+        if recipeinfo[5]:  # if the recipe is private
+            users.check_user(recipeinfo[1])
         if recipeinfo[4] == -1: 
             time = "-"
         else:
@@ -86,7 +88,6 @@ def modify():
     if request.method == "POST":
         user_id = request.form["user_id"]
         id = request.form["recipe_id"]
-        print(id)
         recipeinfo = recipes.recipe_properties(id)
         ingr = recipes.recipe_ingredients(id)
         inst = recipes.recipe_instructions(id)
@@ -96,7 +97,6 @@ def modify():
 def savechanges():
     if request.method == "POST":
         recipe_id = request.form["recipe_id"]
-        print(recipe_id)
         new_name = request.form["name"].strip()
 
         new_desc = request.form["description"].strip()
@@ -114,9 +114,7 @@ def savechanges():
                 recipes.add_ingredient(recipe_id, parts[0].strip(), parts[1].strip())
 
         removed = request.form.getlist("removed")
-        print("Removed",removed)
         for ing in removed:
-            print(ing)
             recipes.remove_ingredient(ing)
 
 
