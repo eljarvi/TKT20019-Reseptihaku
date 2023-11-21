@@ -9,9 +9,10 @@ def add_recipe(user_id, name, desc, time, priv, ingr, inst):
     recipe_id = db.session.execute(text(sql), {"user_id": user_id, "name":name, "desc":desc, "time": time, "priv": priv}).fetchone()[0]
     for ingredient in ingr.strip().split("\n"):
         parts = ingredient.split(";")
-        add_ingredient(recipe_id, parts[0].strip(), parts[1].strip())
+        sql = "INSERT INTO Ingredients (recipe_id, name, quantity, visible) \
+            VALUES (:recipe_id, :name, :quantity, true)"
+        db.session.execute(text(sql), {"recipe_id": recipe_id, "name": parts[0].strip(), "quantity": parts[1].strip()})
     add_instructions(recipe_id, inst)
-    db.session.commit()
 
 def add_instructions(recipe_id, instruction):
     sql = "INSERT INTO Instructions (recipe_id, instruction, visible) \
@@ -71,6 +72,11 @@ def change_recipe_properties(recipe_id, name, desc, time, priv):
 def change_recipe_instructions(recipe_id, instructions):
     sql = "UPDATE Instructions SET instruction = :instructions WHERE recipe_id = :recipe_id"
     db.session.execute(text(sql), {"recipe_id": recipe_id, "instructions": instructions})
+    db.session.commit()
+
+def remove_ingredient(ingredient_id):
+    sql = "UPDATE Ingredients SET visible = false WHERE id =:ingredient_id"
+    db.session.execute(text(sql), {"ingredient_id": ingredient_id})
     db.session.commit()
 
 
