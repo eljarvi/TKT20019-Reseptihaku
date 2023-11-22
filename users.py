@@ -40,6 +40,3 @@ def check_user(id):
     if id != session["user_id"]:
         abort(403)
 
-def require_login():
-    if not "user_id" in session:
-        abort(403)

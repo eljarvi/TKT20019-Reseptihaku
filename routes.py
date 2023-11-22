@@ -43,10 +43,11 @@ def myrecipes(user_id):
 
 @app.route("/addrecipe", methods = ["post", "get"])
 def addrecipe():
-    users.require_login()
     if request.method == "GET":
         return render_template("addrecipe.html")
     if request.method == "POST":
+        user = request.form["user_id"]
+        users.check_user(int(user))
         name = request.form["name"]
         time = request.form["time"]
         if not time.isdigit():
@@ -55,8 +56,7 @@ def addrecipe():
         ingr = request.form["ingredients"]
         inst = request.form["instructions"]
         priv = request.form["privacy"]
-        user = request.form["user_id"]
-
+    
         recipes.add_recipe(user, name, desc, time, priv, ingr, inst)
     
         return redirect("/myrecipes/"+str(user))
@@ -79,6 +79,7 @@ def recipe(recipe_id):
 def delete():
     if request.method == "POST":
         user_id = request.form["user_id"]
+        users.check_user(int(user_id))
         recipe_id = request.form["recipe_id"]
         recipes.remove_recipe(recipe_id)
         return redirect("/myrecipes/"+user_id)
@@ -87,6 +88,7 @@ def delete():
 def modify():
     if request.method == "POST":
         user_id = request.form["user_id"]
+        users.check_user(int(user_id))
         id = request.form["recipe_id"]
         recipeinfo = recipes.recipe_properties(id)
         ingr = recipes.recipe_ingredients(id)
@@ -97,8 +99,9 @@ def modify():
 def savechanges():
     if request.method == "POST":
         recipe_id = request.form["recipe_id"]
+        owner_id = recipes.recipe_properties(recipe_id)[1]
+        users.check_user(owner_id)
         new_name = request.form["name"].strip()
-
         new_desc = request.form["description"].strip()
         new_time = request.form["time"]
         if not new_time.isdigit():
@@ -127,9 +130,10 @@ def search():
     if request.method == "POST":
         name= request.form["name"]
         time = request.form["time"]
-        ingredient = request.form["ingredient"]
-        recipesinfo = [recipes.recipe_properties(x) for x in recipes.search_recipes(name, time, ingredient)]
-        return render_template("search.html", recipes = recipesinfo, name_search = name, maxtime = time, ing_search = ingredient)
+        ingredients = request.form["ingredient"].strip()
+        ingredientlist = [x.strip().lower() for x in ingredients.split(",")]
+        recipesinfo = [recipes.recipe_properties(x) for x in recipes.search_recipes(name, time, ingredientlist)]
+        return render_template("search.html", recipes = recipesinfo, name_search = name, maxtime = time, ing_search = ingredients)
 
 
 

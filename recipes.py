@@ -74,16 +74,23 @@ def remove_ingredient(ingredient_id):
     db.session.execute(text(sql), {"ingredient_id": ingredient_id})
     db.session.commit()
 
-def search_recipes(name, maxtime, ingredient):
+def search_recipes(name, maxtime, ingredients):
     if maxtime == "":
-        maxtime = 10000
+        maxtime = 100000
     name = "%"+name.lower()+"%"
-    sql = "SELECT id FROM Recipes WHERE time <= :maxtime AND LOWER(name) LIKE :name AND visible"
+    sql = "SELECT id FROM Recipes WHERE time <= :maxtime AND LOWER(name) LIKE :name AND visible AND NOT privacy"
     results1 = [x[0] for x in db.session.execute(text(sql), {"maxtime": maxtime, "name": name}).fetchall()]
-    ingredient = "%" + ingredient + "%"
-    sql = "SELECT recipe_id FROM Ingredients WHERE LOWER(name) LIKE :ingredient AND visible"
-    results2 = [x[0] for x in db.session.execute(text(sql), {"ingredient": ingredient})]
-    return list(set(results1) & set(results2)) 
+    first = True
+    for ingredient in ingredients:
+        ingredient = "%" + ingredient + "%"
+        sql = "SELECT recipe_id FROM Ingredients WHERE LOWER(name) LIKE :ingredient AND visible"
+        results2 = [x[0] for x in db.session.execute(text(sql), {"ingredient": ingredient})]
+        if first:
+            results3 = results2
+            first = False
+            continue
+        results3 = list(set(results3) & set(results2))
+    return list(set(results1) & set(results3)) 
 
 
 
