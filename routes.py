@@ -54,7 +54,7 @@ def addrecipe():
         desc = request.form["description"]
         ingr = request.form["ingredients"]
         inst = request.form["instructions"]
-        priv = True
+        priv = request.form["privacy"]
         user = request.form["user_id"]
 
         recipes.add_recipe(user, name, desc, time, priv, ingr, inst)
@@ -116,10 +116,23 @@ def savechanges():
         removed = request.form.getlist("removed")
         for ing in removed:
             recipes.remove_ingredient(ing)
-
-
         
     return redirect("/recipe/"+recipe_id)
+
+@app.route("/search", methods = ["post", "get"])
+def search():
+    if request.method == "GET":
+        recipesinfo = [recipes.recipe_properties(x) for x in recipes.all_recipes()]
+        return render_template("search.html", recipes = recipesinfo, name_search = "", maxtime = "", ing_search = "")
+    if request.method == "POST":
+        name= request.form["name"]
+        time = request.form["time"]
+        ingredient = request.form["ingredient"]
+        recipesinfo = [recipes.recipe_properties(x) for x in recipes.search_recipes(name, time, ingredient)]
+        return render_template("search.html", recipes = recipesinfo, name_search = name, maxtime = time, ing_search = ingredient)
+
+
+
 
 
 

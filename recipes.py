@@ -11,7 +11,6 @@ def add_recipe(user_id, name, desc, time, priv, ingr, inst):
         sql = "INSERT INTO Ingredients (recipe_id, name, quantity, visible) \
             VALUES (:recipe_id, :name, :quantity, true)"
         db.session.execute(text(sql), {"recipe_id": recipe_id, "name": parts[0].strip(), "quantity": parts[1].strip()})
-    add_instructions(recipe_id, inst)
     sql = "INSERT INTO Instructions (recipe_id, instruction, visible) \
             VALUES (:recipe_id, :instruction, true)"
     db.session.execute(text(sql), {"recipe_id": recipe_id, "instruction": inst})
@@ -42,7 +41,8 @@ def users_recipes(user_id):
 
 def all_recipes():
     sql = "SELECT id FROM Recipes WHERE privacy = FALSE AND visible"
-    return db.session.execute(text(sql)).fetchall()
+    result = db.session.execute(text(sql)).fetchall()
+    return [x[0] for x in result]
 
 def remove_recipe(recipe_id):
     sql = "UPDATE Recipes SET visible = FALSE WHERE id = :recipe_id"
@@ -74,7 +74,16 @@ def remove_ingredient(ingredient_id):
     db.session.execute(text(sql), {"ingredient_id": ingredient_id})
     db.session.commit()
 
-
+def search_recipes(name, maxtime, ingredient):
+    if maxtime == "":
+        maxtime = 10000
+    name = "%"+name.lower()+"%"
+    sql = "SELECT id FROM Recipes WHERE time <= :maxtime AND LOWER(name) LIKE :name AND visible"
+    results1 = [x[0] for x in db.session.execute(text(sql), {"maxtime": maxtime, "name": name}).fetchall()]
+    ingredient = "%" + ingredient + "%"
+    sql = "SELECT recipe_id FROM Ingredients WHERE LOWER(name) LIKE :ingredient AND visible"
+    results2 = [x[0] for x in db.session.execute(text(sql), {"ingredient": ingredient})]
+    return list(set(results1) & set(results2)) 
 
 
 

@@ -1,0 +1,11 @@
+<h3>Hae reseptiä</h3>
+<form action="/search" method="post">
+Nimi: <input type="text" name = "name" value ="{{name_search}}" minlength="1" maxlength="50"><br>
+Maksimivalmistusaika: <input type="number" name = "time" value = "{{maxtime}}"><br>
+Hae raaka-aineen perusteella: <input type="text" name ="ingredient" value = "{{ing_search}}"><br>
+<input type="submit" value="Hae">
+</form><br>
+
+{% for recipe in recipes %}
+<a href="/recipe/{{recipe[0]}}">{{recipe[2]}}</a><br>
+{% endfor %}

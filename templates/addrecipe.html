@@ -12,7 +12,9 @@ juusto; 100g
 Ohje reseptin valmistukseen:<br>
 <textarea name = "instructions" rows = "5", cols = "40" maxlength="1000"></textarea><br>
 
-Yksityinen: <input type = "checkbox", name = "privacy" value = "1" checked>
+<input type = "radio" name = "privacy" value="true" checked="checked"> Yksityinen
+<input type="radio" name = "privacy" value="false"> Julkinen
+
 <input type="submit" value = "Lisää resepti">
 <input type = "hidden" name = "user_id" value = "{{session['user_id']}}">
 </form>

@@ -1,7 +1,7 @@
 
 <h2>Reseptihaku</h2>
 <p>
-Tietokannassa on {{ recipes_count }} julkista reseptiä.
+Tietokannassa on {{ recipes_count }} julkista reseptiä. <a href="/search">Hae reseptiä</a>
 </p>
 {% if session["user_id"] %}
 Olet kirjautunut sisään nimellä <b>{{ session["username"] }}</b>.
