@@ -81,7 +81,16 @@ def recipe(recipe_id):
             time = recipeinfo[4] 
         ingr = recipes.recipe_ingredients(recipe_id)
         inst= recipes.recipe_instructions(recipe_id)
-        return render_template("recipe.html", id = recipe_id, owner_id = recipeinfo[1], name = recipeinfo[2], description = recipeinfo[3], time = time, ingredients =ingr, instruction = inst)
+        parameters = {
+            "id" : recipe_id,
+            "owner_id" : recipeinfo[1], 
+            "name" : recipeinfo[2], 
+            "description" : recipeinfo[3], 
+            "time": time,
+            "ingredients" : ingr, 
+            "instruction" : inst
+        }
+        return render_template("recipe.html", **parameters)
 
 @app.route("/delete", methods = ["post"])
 def delete():
@@ -97,11 +106,20 @@ def modify():
     if request.method == "POST":
         user_id = request.form["user_id"]
         users.check_user(int(user_id))
-        id = request.form["recipe_id"]
-        recipeinfo = recipes.recipe_properties(id)
-        ingr = recipes.recipe_ingredients(id)
-        inst = recipes.recipe_instructions(id)
-        return render_template("modify.html", id = id, name = recipeinfo[2], desc=recipeinfo[3], time = recipeinfo[4], priv = recipeinfo[5], ingredients = ingr, instructions = inst)
+        recipe_id = request.form["recipe_id"]
+        recipeinfo = recipes.recipe_properties(recipe_id)
+        ingr = recipes.recipe_ingredients(recipe_id)
+        inst = recipes.recipe_instructions(recipe_id)
+        parameters = {
+            "id": recipe_id,
+            "name": recipeinfo[2],
+            "desc": recipeinfo[3],
+            "time": recipeinfo[4],
+            "priv": recipeinfo[5],
+            "ingredients": ingr,
+            "instructions": inst
+        }
+        return render_template("modify.html", **parameters)
 
 @app.route("/savechanges", methods = ["post"])
 def savechanges():
