@@ -44,6 +44,7 @@ def myrecipes(user_id):
 @app.route("/addrecipe", methods = ["post", "get"])
 def addrecipe():
     if request.method == "GET":
+        users.require_login()
         return render_template("addrecipe.html")
     if request.method == "POST":
         user = request.form["user_id"]
