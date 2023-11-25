@@ -56,7 +56,12 @@ def addrecipe():
         if not time.isdigit() or time == 0:
             time = -1
         desc = request.form["description"]
-        ingr = request.form["ingredients"]
+        ingr = [[x.strip() for x in pair.split(";")] for pair in request.form["ingredients"].strip().split("\n")]
+        print(ingr)
+        for list in ingr:
+            if len(list) != 2:
+                return render_template("error.html", message = "Raaka-aineet on syötettävä omille riveilleen muodossa raaka-aine;määrä.\n" +
+                                                            "Jos et halua lisätä määrää kirjoita muodossa raaka-aine; .")
         inst = request.form["instructions"]
         priv = request.form["privacy"]
     

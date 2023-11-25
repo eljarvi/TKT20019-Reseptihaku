@@ -6,11 +6,10 @@ def add_recipe(user_id, name, desc, time, priv, ingr, inst):
     sql = "INSERT INTO Recipes (user_id, name, description, time, privacy, visible) \
             VALUES (:user_id, :name, :desc, :time, :priv, true) RETURNING id"
     recipe_id = db.session.execute(text(sql), {"user_id": user_id, "name":name, "desc":desc, "time": time, "priv": priv}).fetchone()[0]
-    for ingredient in ingr.strip().split("\n"):
-        parts = ingredient.split(";")
+    for ingredient in ingr:
         sql = "INSERT INTO Ingredients (recipe_id, name, quantity, visible) \
             VALUES (:recipe_id, :name, :quantity, true)"
-        db.session.execute(text(sql), {"recipe_id": recipe_id, "name": parts[0].strip(), "quantity": parts[1].strip()})
+        db.session.execute(text(sql), {"recipe_id": recipe_id, "name": ingredient[0], "quantity": ingredient[1]})
     sql = "INSERT INTO Instructions (recipe_id, instruction, visible) \
             VALUES (:recipe_id, :instruction, true)"
     db.session.execute(text(sql), {"recipe_id": recipe_id, "instruction": inst})
@@ -37,12 +36,12 @@ def recipe_instructions(recipe_id):
 def users_recipes(user_id):
     sql = "SELECT id FROM Recipes WHERE user_id = :user_id AND visible"
     result = db.session.execute(text(sql), {"user_id": user_id}).fetchall()
-    return [x[0] for x in result]
+    return [row[0] for row in result]
 
 def all_recipes():
     sql = "SELECT id FROM Recipes WHERE privacy = FALSE AND visible"
     result = db.session.execute(text(sql)).fetchall()
-    return [x[0] for x in result]
+    return [row[0] for row in result]
 
 def remove_recipe(recipe_id):
     sql = "UPDATE Recipes SET visible = FALSE WHERE id = :recipe_id"
@@ -79,12 +78,12 @@ def search_recipes(name, maxtime, ingredients):
         maxtime = 100000
     name = "%"+name.lower()+"%"
     sql = "SELECT id FROM Recipes WHERE time <= :maxtime AND LOWER(name) LIKE :name AND visible AND NOT privacy"
-    results1 = [x[0] for x in db.session.execute(text(sql), {"maxtime": maxtime, "name": name}).fetchall()]
+    results1 = [row[0] for row in db.session.execute(text(sql), {"maxtime": maxtime, "name": name}).fetchall()]
     first = True
     for ingredient in ingredients:
         ingredient = "%" + ingredient + "%"
         sql = "SELECT recipe_id FROM Ingredients WHERE LOWER(name) LIKE :ingredient AND visible"
-        results2 = [x[0] for x in db.session.execute(text(sql), {"ingredient": ingredient})]
+        results2 = [row[0] for row in db.session.execute(text(sql), {"ingredient": ingredient})]
         if first:
             results3 = results2
             first = False
