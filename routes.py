@@ -50,8 +50,10 @@ def addrecipe():
         user = request.form["user_id"]
         users.check_user(int(user))
         name = request.form["name"]
+        if len(name) <1 or len(name) > 50:
+            return render_template("error.html", message = "Nimen tulee olla 1-50 merkkiä.")
         time = request.form["time"]
-        if not time.isdigit():
+        if not time.isdigit() or time == 0:
             time = -1
         desc = request.form["description"]
         ingr = request.form["ingredients"]
