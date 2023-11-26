@@ -128,23 +128,31 @@ def savechanges():
         owner_id = recipes.recipe_properties(recipe_id)[1]
         users.check_user(owner_id)
         new_name = request.form["name"].strip()
+        if len(new_name) < 1 or len(new_name) > 50:
+            return render_template("error.html", message = "Nimen tulee olla 1-50 merkkiä.")
         new_desc = request.form["description"].strip()
         new_time = request.form["time"]
         if not new_time.isdigit():
             new_time = -1
         new_priv = request.form["privacy"]
-        recipes.change_recipe_properties(recipe_id, new_name, new_desc, new_time, new_priv)
         new_inst = request.form["instructions"]
-        recipes.change_recipe_instructions(recipe_id, new_inst)
-        new_ings = request.form["ingredients"].strip().split("\n")
-        for ing in new_ings:
-            parts = ing.split(";")
-            if len(parts) == 2:
-                recipes.add_ingredient(recipe_id, parts[0].strip(), parts[1].strip())
+        new_ings = request.form["ingredients"].strip()
+        if not new_ings == "":
+            for ing in new_ings.split("\n"):
+                parts = ing.split(";")
+                if len(parts) == 2:
+                    if parts[0].strip() != "":
+                        recipes.add_ingredient(recipe_id, parts[0].strip(), parts[1].strip())
+                else:
+                    return render_template("error.html", message = "Raaka-aineet on syötettävä omille riveilleen muodossa raaka-aine;määrä.\n" +
+                                                                "Jos et halua lisätä määrää kirjoita muodossa raaka-aine; .")
 
         removed = request.form.getlist("removed")
         for ing in removed:
             recipes.remove_ingredient(ing)
+
+        recipes.change_recipe_properties(recipe_id, new_name, new_desc, new_time, new_priv)
+        recipes.change_recipe_instructions(recipe_id, new_inst)
         
     return redirect("/recipe/"+recipe_id)
 
