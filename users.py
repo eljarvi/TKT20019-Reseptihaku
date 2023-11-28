@@ -3,14 +3,16 @@ from flask import abort, session
 from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
 
-# TODO: improve security
 
 def register(username, password, admin=False):
     try:
         hash_value = generate_password_hash(password)
         sql = "INSERT INTO Users (username, password, admin) VALUES \
                 (:username, :hash_value, :admin)"
-        db.session.execute(text(sql), {"username":username, "hash_value": hash_value, "admin": admin})
+        db.session.execute(
+            text(sql),
+            {"username":username, "hash_value": hash_value, "admin": admin}
+        )
         db.session.commit()
     except:
         return False
@@ -33,14 +35,13 @@ def logout():
     del session["user_id"]
     del session["user_admin"]
 
-def check_user(id):
+def check_user(user_id):
     if not "user_id" in session:
         abort(403)
         return
-    if id != session["user_id"]:
+    if user_id != session["user_id"]:
         abort(403)
 
 def require_login():
     if not "user_id" in session:
         abort(403)
-

@@ -1,5 +1,5 @@
-from app import app
 from flask import render_template, request, redirect
+from app import app
 import recipes
 import users
 
@@ -16,8 +16,7 @@ def login():
         password = request.form["password"]
         if users.login(user, password):
             return redirect("/")
-        else:
-            return render_template("login.html")
+        return render_template("login.html")
 
 @app.route("/register", methods = ['post', 'get'])
 def register():
@@ -25,11 +24,15 @@ def register():
         return render_template("register.html")
     if request.method == "POST":
         username = request.form["username"]
+        if len(username) < 1 or len(username) >20:
+            return render_template("error.html", message="Tunnuksessa tulee olla 1-20 merkkiä")
         password = request.form["password"]
+        if len(password) < 5 or len(password)>50:
+            return render_template("error.html", message="Salasanassa tulee olla 5-50 merkkiä")
         if users.register(username, password):
             return redirect("/")
-        return redirect("/")
-
+        return render_template("error.html", message="Rekisteröinti ei onnistunut")
+""
 @app.route("/logout")
 def logout():
     users.logout()
@@ -56,17 +59,19 @@ def addrecipe():
         if not time.isdigit() or time == 0:
             time = -1
         desc = request.form["description"]
-        ingr = [[x.strip() for x in pair.split(";")] for pair in request.form["ingredients"].strip().split("\n")]
-        print(ingr)
-        for list in ingr:
-            if len(list) != 2:
-                return render_template("error.html", message = "Raaka-aineet on syötettävä omille riveilleen muodossa raaka-aine;määrä.\n" +
-                                                            "Jos et halua lisätä määrää kirjoita muodossa raaka-aine; .")
+        ingr_text = request.form["ingredients"].strip()
+        ingr = [[x.strip() for x in pair.split(";")] for pair in ingr_text.split("\n")]
+        for parts in ingr:
+            if len(parts) != 2:
+                return render_template(
+                        "error.html",
+                         message = "Raaka-aineet on syötettävä omille" +
+                                "riveilleen muodossa raaka-aine;määrä.\n" +
+                                "Jos et halua lisätä määrää kirjoita muodossa raaka-aine; ."
+                        )
         inst = request.form["instructions"]
         priv = request.form["privacy"]
-    
         recipes.add_recipe(user, name, desc, time, priv, ingr, inst)
-    
         return redirect("/myrecipes/"+str(user))
 
 @app.route("/recipe/<int:recipe_id>", methods = ["get"])
@@ -75,19 +80,19 @@ def recipe(recipe_id):
         recipeinfo = recipes.recipe_properties(recipe_id)
         if recipeinfo[5]:  # if the recipe is private
             users.check_user(recipeinfo[1])
-        if recipeinfo[4] == -1: 
+        if recipeinfo[4] == -1:
             time = "-"
         else:
-            time = recipeinfo[4] 
+            time = recipeinfo[4]
         ingr = recipes.recipe_ingredients(recipe_id)
         inst= recipes.recipe_instructions(recipe_id)
         parameters = {
             "id" : recipe_id,
-            "owner_id" : recipeinfo[1], 
-            "name" : recipeinfo[2], 
-            "description" : recipeinfo[3], 
+            "owner_id" : recipeinfo[1],
+            "name" : recipeinfo[2],
+            "description" : recipeinfo[3],
             "time": time,
-            "ingredients" : ingr, 
+            "ingredients" : ingr,
             "instruction" : inst
         }
         return render_template("recipe.html", **parameters)
@@ -144,8 +149,12 @@ def savechanges():
                     if parts[0].strip() != "":
                         recipes.add_ingredient(recipe_id, parts[0].strip(), parts[1].strip())
                 else:
-                    return render_template("error.html", message = "Raaka-aineet on syötettävä omille riveilleen muodossa raaka-aine;määrä.\n" +
-                                                                "Jos et halua lisätä määrää kirjoita muodossa raaka-aine; .")
+                    return render_template(
+                        "error.html",
+                        message = "Raaka-aineet on syötettävä omille" +
+                                    "riveilleen muodossa raaka-aine;määrä.\n" +
+                                    "Jos et halua lisätä määrää kirjoita muodossa raaka-aine; ."
+                            )
 
         removed = request.form.getlist("removed")
         for ing in removed:
@@ -153,28 +162,23 @@ def savechanges():
 
         recipes.change_recipe_properties(recipe_id, new_name, new_desc, new_time, new_priv)
         recipes.change_recipe_instructions(recipe_id, new_inst)
-        
+
     return redirect("/recipe/"+recipe_id)
 
 @app.route("/search", methods = ["post", "get"])
 def search():
     if request.method == "GET":
         recipesinfo = [recipes.recipe_properties(x) for x in recipes.all_recipes()]
-        return render_template("search.html", recipes = recipesinfo, name_search = "", maxtime = "", ing_search = "")
+        return render_template("search.html", recipes=recipesinfo,
+                                name_search="", maxtime="", ing_search=""
+                )
     if request.method == "POST":
         name= request.form["name"]
         time = request.form["time"]
         ingredients = request.form["ingredient"].strip()
         ingredientlist = [x.strip().lower() for x in ingredients.split(",")]
-        recipesinfo = [recipes.recipe_properties(x) for x in recipes.search_recipes(name, time, ingredientlist)]
-        return render_template("search.html", recipes = recipesinfo, name_search = name, maxtime = time, ing_search = ingredients)
-
-
-
-
-
-
-
-
-
-
+        recipe_search = recipes.search_recipes(name, time, ingredientlist)
+        recipesinfo = [recipes.recipe_properties(x) for x in recipe_search]
+        return render_template("search.html", recipes=recipesinfo,
+                                name_search=name, maxtime=time, ing_search=ingredients
+                )
