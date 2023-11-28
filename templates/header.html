@@ -1,0 +1,14 @@
+<header>
+    <h1>RESEPTIHAKU</h1>
+    <p>
+        <a href="/">Etusivu</a> |
+        <a href="/search">Hae reseptiä</a> | 
+        {% if session["user_id"] %}
+        <a href="/myrecipes/{{ session['user_id'] }}">Omat reseptit</a> |
+        <a href="/addrecipe">Lisää resepti</a> |
+        <a href="/logout">Kirjaudu ulos</a>
+        {% else %}
+        <a href="/login">Kirjaudu</a>
+        {% endif %}
+    </p>
+</header>

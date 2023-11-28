@@ -1,3 +1,5 @@
+{% include 'header.html' %}
+
 <h2>Muokkaa reseptiä: {{name}}</h2>
 <form action="/savechanges" method="post">
 Uusi nimi:<input type="text" name = "name" value="{{name}}" minlength="1" maxlength="50"><br>

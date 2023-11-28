@@ -1,13 +1,11 @@
+{% include 'header.html' %}
 
-<h2>Reseptihaku</h2>
+<h2>Tervetuloa!</h2>
 <p>
-Tietokannassa on {{ recipes_count }} julkista reseptiä. <a href="/search">Hae reseptiä</a>
-</p>
+Tietokannassa on {{ recipes_count }} julkista reseptiä. 
 {% if session["user_id"] %}
 Olet kirjautunut sisään nimellä <b>{{ session["username"] }}</b>.
-<a href="/logout">Kirjaudu ulos</a>
-Näät omat reseptisi <a href="/myrecipes/{{ session['user_id'] }}">täältä</a>
 {% else %}
-Et ole kirjautunut sisään. <a href="/login">Kirjaudu sisään</a>
+Et ole kirjautunut sisään.
 {% endif %}
-
+</p>
