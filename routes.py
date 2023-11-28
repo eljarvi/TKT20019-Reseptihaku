@@ -62,12 +62,13 @@ def addrecipe():
         ingr_text = request.form["ingredients"].strip()
         ingr = [[x.strip() for x in pair.split(";")] for pair in ingr_text.split("\n")]
         for parts in ingr:
-            if len(parts) != 2:
+            if len(parts) != 2 or parts[0].strip() == "":
                 return render_template(
                         "error.html",
-                         message = "Raaka-aineet on syötettävä omille" +
+                         message = "Raaka-aineet on syötettävä omille " +
                                 "riveilleen muodossa raaka-aine;määrä.\n" +
-                                "Jos et halua lisätä määrää kirjoita muodossa raaka-aine; ."
+                                "Jos et halua lisätä määrää kirjoita muodossa raaka-aine; . " +
+                                "Raaka-ainekenttä ei voi olla tyhjä."
                         )
         inst = request.form["instructions"]
         priv = request.form["privacy"]
