@@ -25,9 +25,6 @@ Valmistusaika: {{time}} min<br>
 <input type="submit" value = "Muokkaa">
 </form>
 {% endif %}
-
-{% if session["user_id"] != owner_id and session["user_id"] %}
+{% if session["user_id"] != owner_id and session["user_id"] and not reviewed %}
 {% include 'addreview.html' %}
 {% endif %}
-
-
