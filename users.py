@@ -45,3 +45,8 @@ def check_user(user_id):
 def require_login():
     if not "user_id" in session:
         abort(403)
+
+def get_user():
+    if not "user_id" in session:
+        return 0
+    return session["user_id"]
