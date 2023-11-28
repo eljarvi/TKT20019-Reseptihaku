@@ -176,10 +176,16 @@ def search():
     if request.method == "POST":
         name= request.form["name"]
         time = request.form["time"]
-        ingredients = request.form["ingredient"].strip()
-        ingredientlist = [x.strip().lower() for x in ingredients.split(",")]
-        recipe_search = recipes.search_recipes(name, time, ingredientlist)
+        time2 = time
+        if time == "":
+            time2 = 100000 
+        ingredient = request.form["ingredient"].strip()
+        recipe_search = recipes.search_recipes(
+                        "%"+name.lower()+"%",
+                        time2,
+                        "%"+ingredient.lower()+"%"
+                        )
         recipesinfo = [recipes.recipe_properties(x) for x in recipe_search]
         return render_template("search.html", recipes=recipesinfo,
-                                name_search=name, maxtime=time, ing_search=ingredients
+                                name_search=name, maxtime=time, ing_search=ingredient
                 )

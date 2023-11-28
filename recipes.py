@@ -5,11 +5,18 @@ from sqlalchemy.sql import text
 def add_recipe(user_id, name, desc, time, priv, ingr, inst):
     sql = "INSERT INTO Recipes (user_id, name, description, time, privacy, visible) \
             VALUES (:user_id, :name, :desc, :time, :priv, true) RETURNING id"
-    recipe_id = db.session.execute(text(sql), {"user_id": user_id, "name":name, "desc":desc, "time": time, "priv": priv}).fetchone()[0]
+    recipe_id = db.session.execute(
+        text(sql),
+        {"user_id": user_id, "name":name, "desc":desc, "time": time, "priv": priv}
+        ).fetchone()[0]
+
     for ingredient in ingr:
         sql = "INSERT INTO Ingredients (recipe_id, name, quantity, visible) \
             VALUES (:recipe_id, :name, :quantity, true)"
-        db.session.execute(text(sql), {"recipe_id": recipe_id, "name": ingredient[0], "quantity": ingredient[1]})
+        db.session.execute(
+            text(sql),
+            {"recipe_id": recipe_id, "name": ingredient[0], "quantity": ingredient[1]}
+            )
     sql = "INSERT INTO Instructions (recipe_id, instruction, visible) \
             VALUES (:recipe_id, :instruction, true)"
     db.session.execute(text(sql), {"recipe_id": recipe_id, "instruction": inst})
@@ -22,7 +29,8 @@ def add_ingredient(recipe_id, name, quantity):
     db.session.commit()
 
 def recipe_properties(recipe_id):
-    sql = "SELECT id, user_id, name, description, time, privacy FROM Recipes WHERE id = :recipe_id AND visible"
+    sql = "SELECT id, user_id, name, description, time,  \
+            privacy FROM Recipes WHERE id = :recipe_id AND visible"
     return db.session.execute(text(sql), {"recipe_id": recipe_id}).fetchone()
 
 def recipe_ingredients(recipe_id):
@@ -73,23 +81,14 @@ def remove_ingredient(ingredient_id):
     db.session.execute(text(sql), {"ingredient_id": ingredient_id})
     db.session.commit()
 
-def search_recipes(name, maxtime, ingredients):
-    if maxtime == "":
-        maxtime = 100000
-    name = "%"+name.lower()+"%"
-    sql = "SELECT id FROM Recipes WHERE time <= :maxtime AND LOWER(name) LIKE :name AND visible AND NOT privacy"
-    results1 = [row[0] for row in db.session.execute(text(sql), {"maxtime": maxtime, "name": name}).fetchall()]
-    first = True
-    for ingredient in ingredients:
-        ingredient = "%" + ingredient + "%"
-        sql = "SELECT recipe_id FROM Ingredients WHERE LOWER(name) LIKE :ingredient AND visible"
-        results2 = [row[0] for row in db.session.execute(text(sql), {"ingredient": ingredient})]
-        if first:
-            results3 = results2
-            first = False
-            continue
-        results3 = list(set(results3) & set(results2))
-    return list(set(results1) & set(results3)) 
-
-
-
+def search_recipes(name, maxtime, ingredient):
+    sql = "SELECT DISTINCT R.id FROM Recipes R, Ingredients I \
+            WHERE R.id = I.recipe_id AND LOWER(R.name) LIKE :name \
+            AND R.time <= :maxtime AND I.visible AND NOT R.privacy \
+            AND LOWER(I.name) LIKE :ingredient"
+    result = db.session.execute(
+            text(sql),
+            {"maxtime": maxtime, "name": name, "ingredient": ingredient}
+            ).fetchall()
+    return [row[0] for row in result]
+        
