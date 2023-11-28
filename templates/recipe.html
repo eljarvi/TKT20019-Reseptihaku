@@ -14,15 +14,20 @@ Valmistusaika: {{time}} min<br>
 
 {% if session["user_id"] == owner_id%}
 <form action="/delete" method = "post">
-<input type = "hidden" name = "recipe_id" value = "{{id}}">
+<input type = "hidden" name = "recipe_id" value = "{{recipe_id}}">
 <input type="hidden" name = "user_id" value = "{{session['user_id']}}">
 <input type="submit" value = "Poista">
 </form>
 
 <form action="/modify" method="post">
-<input type = "hidden" name = "recipe_id" value = "{{id}}">
+<input type = "hidden" name = "recipe_id" value = "{{recipe_id}}">
 <input type = "hidden" name = "user_id" value = "{{session['user_id']}}">
 <input type="submit" value = "Muokkaa">
 </form>
-
 {% endif %}
+
+{% if session["user_id"] != owner_id and session["user_id"] %}
+{% include 'addreview.html' %}
+{% endif %}
+
+

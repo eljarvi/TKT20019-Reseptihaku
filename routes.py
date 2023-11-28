@@ -2,12 +2,13 @@ from flask import render_template, request, redirect
 from app import app
 import recipes
 import users
+import reviews
 
 @app.route("/")
 def index():
     return render_template("index.html", recipes_count = len(recipes.all_recipes()))
 
-@app.route("/login", methods = ['post', 'get'])
+@app.route("/login", methods=['post', 'get'])
 def login():
     if request.method == "GET":
         return render_template("login.html")
@@ -18,7 +19,7 @@ def login():
             return redirect("/")
         return render_template("login.html")
 
-@app.route("/register", methods = ['post', 'get'])
+@app.route("/register", methods=['post', 'get'])
 def register():
     if request.method == "GET":
         return render_template("register.html")
@@ -44,7 +45,7 @@ def myrecipes(user_id):
     recipesinfo = [recipes.recipe_properties(x) for x in recipes.users_recipes(user_id)]
     return render_template("myrecipes.html", recipes = recipesinfo)
 
-@app.route("/addrecipe", methods = ["post", "get"])
+@app.route("/addrecipe", methods=["post", "get"])
 def addrecipe():
     if request.method == "GET":
         users.require_login()
@@ -75,7 +76,7 @@ def addrecipe():
         recipes.add_recipe(user, name, desc, time, priv, ingr, inst)
         return redirect("/myrecipes/"+str(user))
 
-@app.route("/recipe/<int:recipe_id>", methods = ["get"])
+@app.route("/recipe/<int:recipe_id>", methods=["get"])
 def recipe(recipe_id):
     if request.method == "GET":
         recipeinfo = recipes.recipe_properties(recipe_id)
@@ -88,7 +89,7 @@ def recipe(recipe_id):
         ingr = recipes.recipe_ingredients(recipe_id)
         inst= recipes.recipe_instructions(recipe_id)
         parameters = {
-            "id" : recipe_id,
+            "recipe_id" : recipe_id,
             "owner_id" : recipeinfo[1],
             "name" : recipeinfo[2],
             "description" : recipeinfo[3],
@@ -98,7 +99,7 @@ def recipe(recipe_id):
         }
         return render_template("recipe.html", **parameters)
 
-@app.route("/delete", methods = ["post"])
+@app.route("/delete", methods=["post"])
 def delete():
     if request.method == "POST":
         user_id = request.form["user_id"]
@@ -107,7 +108,7 @@ def delete():
         recipes.remove_recipe(recipe_id)
         return redirect("/myrecipes/"+user_id)
 
-@app.route("/modify", methods = ["post"])
+@app.route("/modify", methods=["post"])
 def modify():
     if request.method == "POST":
         user_id = request.form["user_id"]
@@ -127,7 +128,7 @@ def modify():
         }
         return render_template("modify.html", **parameters)
 
-@app.route("/savechanges", methods = ["post"])
+@app.route("/savechanges", methods=["post"])
 def savechanges():
     if request.method == "POST":
         recipe_id = request.form["recipe_id"]
@@ -166,7 +167,7 @@ def savechanges():
 
     return redirect("/recipe/"+recipe_id)
 
-@app.route("/search", methods = ["post", "get"])
+@app.route("/search", methods=["post", "get"])
 def search():
     if request.method == "GET":
         recipesinfo = [recipes.recipe_properties(x) for x in recipes.all_recipes()]
@@ -189,3 +190,18 @@ def search():
         return render_template("search.html", recipes=recipesinfo,
                                 name_search=name, maxtime=time, ing_search=ingredient
                 )
+
+@app.route("/addreview", methods=["post"])
+def addreview():
+    users.require_login()
+    if request.method == "POST":  
+        user_id = request.form["user_id"]
+        users.check_user(int(user_id))
+        recipe_id = request.form["recipe_id"]
+        recipeinfo = recipes.recipe_properties(recipe_id)
+        if recipeinfo[5]: # if recipe is private
+            return render_template("error.html", message="Yksityistä reseptiä ei voi arvostella")
+        review = request.form["review"]
+        grade = request.form["grade"]
+        reviews.add_review(user_id, recipe_id, review, grade)
+        return redirect("/recipe/"+recipe_id)
