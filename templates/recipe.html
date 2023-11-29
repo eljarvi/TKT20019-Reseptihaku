@@ -28,3 +28,16 @@ Valmistusaika: {{time}} min<br>
 {% if session["user_id"] != owner_id and session["user_id"] and not reviewed %}
 {% include 'addreview.html' %}
 {% endif %}
+
+{% if reviewed %}
+Olet antanut reseptille arvostelun.<br>
+{% endif %}
+
+Arvostelut:<br>
+{% for review in reviews %}
+{% if review[1] == session["user_id"] %}
+Tämä on sinun arvostelusi.
+{% endif %}
+{{review[2]}} (arvosana: {{review[3]}})<br>
+{% endfor %}
+

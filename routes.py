@@ -96,7 +96,8 @@ def recipe(recipe_id):
             "time": time,
             "ingredients" : ingr,
             "instruction" : inst,
-            "reviewed": reviews.have_reviewed(users.get_user(), recipe_id)
+            "reviewed": reviews.have_reviewed(users.get_user(), recipe_id),
+            "reviews": reviews.recipe_reviews(recipe_id)
         }
         return render_template("recipe.html", **parameters)
 
