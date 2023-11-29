@@ -29,4 +29,8 @@ def recipe_reviews(recipe_id):
             WHERE visible AND recipe_id = :recipe_id"
     return db.session.execute(text(sql), {"recipe_id": recipe_id}).fetchall()
 
+def remove_review(user_id, recipe_id):
+    sql = "UPDATE Reviews SET visible = false WHERE user_id =:user_id AND recipe_id = :recipe_id"
+    db.session.execute(text(sql), {"user_id": user_id, "recipe_id": recipe_id})
+    db.session.commit()
 
