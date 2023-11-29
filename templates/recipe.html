@@ -25,6 +25,9 @@ Valmistusaika: {{time}} min<br>
 <input type="submit" value = "Muokkaa">
 </form>
 {% endif %}
+
+{% if not priv %}
+
 {% if session["user_id"] != owner_id and session["user_id"] and not reviewed %}
 {% include 'addreview.html' %}
 {% endif %}
@@ -39,12 +42,10 @@ Arvostelut:<br>
 {{review[2]}} (arvosana: {{review[3]}})
 {% else %}
 <b>{{review[2]}} (arvosana: {{review[3]}})</b>
-<form action="/deletereview" method="post" style="display: inline;">
-    <input type="hidden" name="recipe_id" value="{{recipe_id}}">
-    <input type="hidden" name="user_id" value="{{session['user_id']}}">
-    <input type="submit" value="Poista">
-</form>
+{% include 'deletereview.html' %}
 {% endif %}
 <br>
 {% endfor %}
+
+{% endif %}
 

@@ -96,6 +96,7 @@ def recipe(recipe_id):
             "time": time,
             "ingredients" : ingr,
             "instruction" : inst,
+            "priv": recipeinfo[5],
             "reviewed": reviews.have_reviewed(users.get_user(), recipe_id),
             "reviews": reviews.recipe_reviews(recipe_id)
         }
