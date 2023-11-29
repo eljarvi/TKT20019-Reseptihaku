@@ -12,4 +12,5 @@
     <input type="submit" value="Jätä arvostelu">
     <input type="hidden" name="user_id" value="{{session['user_id']}}">
     <input type = "hidden" name="recipe_id" value="{{recipe_id}}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>

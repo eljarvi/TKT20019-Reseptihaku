@@ -1,5 +1,6 @@
+import os
 from db import db
-from flask import abort, session
+from flask import abort, request, session
 from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -28,12 +29,14 @@ def login(username, password):
     session["username"] = username
     session["user_id"] = user[0]
     session["user_admin"] = user[2]
+    session["csrf_token"] = os.urandom(16).hex()
     return True
 
 def logout():
     del session["username"]
     del session["user_id"]
     del session["user_admin"]
+    del session["csrf_token"]
 
 def check_user(user_id):
     if not "user_id" in session:
@@ -50,3 +53,7 @@ def get_user():
     if not "user_id" in session:
         return 0
     return session["user_id"]
+
+def check_csrf():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)

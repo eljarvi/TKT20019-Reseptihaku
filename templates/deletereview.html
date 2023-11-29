@@ -1,5 +1,6 @@
 <form action="/deletereview" method="post" style="display: inline;">
     <input type="hidden" name="recipe_id" value="{{recipe_id}}">
     <input type="hidden" name="user_id" value="{{session['user_id']}}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="submit" value="Poista">
 </form>

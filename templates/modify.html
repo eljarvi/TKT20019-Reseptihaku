@@ -25,5 +25,6 @@ Muuta ohjeita:<br>
 <input type="radio" name = "privacy" value="false"> Julkinen
 
 <input type = "hidden" name = "recipe_id" value = "{{id}}">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input type="submit" value="Tallenna">
 </form>

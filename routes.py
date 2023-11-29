@@ -51,6 +51,7 @@ def addrecipe():
         users.require_login()
         return render_template("addrecipe.html")
     if request.method == "POST":
+        users.check_csrf()
         user = request.form["user_id"]
         users.check_user(int(user))
         name = request.form["name"]
@@ -105,6 +106,7 @@ def recipe(recipe_id):
 @app.route("/delete", methods=["post"])
 def delete():
     if request.method == "POST":
+        users.check_csrf()
         user_id = request.form["user_id"]
         users.check_user(int(user_id))
         recipe_id = request.form["recipe_id"]
@@ -115,6 +117,7 @@ def delete():
 @app.route("/modify", methods=["post"])
 def modify():
     if request.method == "POST":
+        users.check_csrf()
         user_id = request.form["user_id"]
         users.check_user(int(user_id))
         recipe_id = request.form["recipe_id"]
@@ -135,6 +138,7 @@ def modify():
 @app.route("/savechanges", methods=["post"])
 def savechanges():
     if request.method == "POST":
+        users.check_csrf()
         recipe_id = request.form["recipe_id"]
         owner_id = recipes.recipe_properties(recipe_id)[1]
         users.check_user(owner_id)
@@ -198,7 +202,8 @@ def search():
 @app.route("/addreview", methods=["post"])
 def addreview():
     users.require_login()
-    if request.method == "POST":  
+    if request.method == "POST":
+        users.check_csrf()  
         user_id = request.form["user_id"]
         users.check_user(int(user_id))
         recipe_id = request.form["recipe_id"]
@@ -213,6 +218,7 @@ def addreview():
 @app.route("/deletereview", methods = ["post"])
 def deletereview():
     if request.method == "POST":
+        users.check_csrf()
         user_id = request.form["user_id"]
         users.check_user(int(user_id))
         recipe_id = request.form["recipe_id"]
