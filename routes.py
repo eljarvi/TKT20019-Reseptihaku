@@ -207,3 +207,12 @@ def addreview():
         grade = request.form["grade"]
         reviews.add_review(user_id, recipe_id, review, grade)
         return redirect("/recipe/"+recipe_id)
+
+@app.route("/deletereview", methods = ["post"])
+def deletereview():
+    if request.method == "POST":
+        user_id = request.form["user_id"]
+        users.check_user(int(user_id))
+        recipe_id = request.form["recipe_id"]
+        reviews.remove_review(user_id, recipe_id)
+        return redirect("/recipe/"+recipe_id)

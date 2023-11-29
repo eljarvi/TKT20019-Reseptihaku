@@ -35,9 +35,16 @@ Olet antanut reseptille arvostelun.<br>
 
 Arvostelut:<br>
 {% for review in reviews %}
-{% if review[1] == session["user_id"] %}
-Tämä on sinun arvostelusi.
+{% if review[1] != session["user_id"] %}
+{{review[2]}} (arvosana: {{review[3]}})
+{% else %}
+<b>{{review[2]}} (arvosana: {{review[3]}})</b>
+<form action="/deletereview" method="post" style="display: inline;">
+    <input type="hidden" name="recipe_id" value="{{recipe_id}}">
+    <input type="hidden" name="user_id" value="{{session['user_id']}}">
+    <input type="submit" value="Poista">
+</form>
 {% endif %}
-{{review[2]}} (arvosana: {{review[3]}})<br>
+<br>
 {% endfor %}
 
