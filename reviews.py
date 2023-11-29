@@ -9,11 +9,12 @@ def add_review(user_id, recipe_id, review, grade):
             {"user_id": user_id, "recipe_id": recipe_id, "review": review, "grade": grade}
             )
     db.session.commit()
-
+'''
 def review_details(review_id):
     sql = "SELECT user_id, recipe_id, review, grade \
             FROM Reviews WHERE id = :review_id AND visible"
     return db.session.execute(text(sql), {"review_id": review_id}).fetchone()
+'''
 
 def have_reviewed(user_id, recipe_id):
     sql = "SELECT COUNT(id) FROM Reviews WHERE visible \
@@ -34,3 +35,8 @@ def remove_review(user_id, recipe_id):
     db.session.execute(text(sql), {"user_id": user_id, "recipe_id": recipe_id})
     db.session.commit()
 
+def remove_reviews(recipe_id):
+    sql = "UPDATE Reviews SET visible = false WHERE recipe_id = :recipe_id"
+    db.session.execute(text(sql), {"recipe_id": recipe_id})
+    db.session.commit()
+    

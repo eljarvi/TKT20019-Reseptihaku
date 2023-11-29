@@ -108,6 +108,7 @@ def delete():
         users.check_user(int(user_id))
         recipe_id = request.form["recipe_id"]
         recipes.remove_recipe(recipe_id)
+        reviews.remove_reviews(recipe_id)
         return redirect("/myrecipes/"+user_id)
 
 @app.route("/modify", methods=["post"])
