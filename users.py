@@ -57,3 +57,8 @@ def get_user():
 def check_csrf():
     if session["csrf_token"] != request.form["csrf_token"]:
         abort(403)
+
+def require_admin():
+    if not session["user_admin"]:
+        abort(403)
+

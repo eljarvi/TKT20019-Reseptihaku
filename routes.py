@@ -33,7 +33,7 @@ def register():
         if users.register(username, password):
             return redirect("/")
         return render_template("error.html", message="Rekisteröinti ei onnistunut")
-""
+
 @app.route("/logout")
 def logout():
     users.logout()
@@ -109,10 +109,16 @@ def delete():
         users.check_csrf()
         user_id = request.form["user_id"]
         users.check_user(int(user_id))
+        admin = request.form["admin"]
+        if admin.lower() =="true":
+            users.require_admin()
         recipe_id = request.form["recipe_id"]
         recipes.remove_recipe(recipe_id)
         reviews.remove_reviews(recipe_id)
+        if admin.lower() == "true":
+            return redirect("/search")
         return redirect("/myrecipes/"+user_id)
+
 
 @app.route("/modify", methods=["post"])
 def modify():
@@ -215,12 +221,19 @@ def addreview():
         reviews.add_review(user_id, recipe_id, review, grade)
         return redirect("/recipe/"+recipe_id)
 
-@app.route("/deletereview", methods = ["post"])
+
+@app.route("/deletereview", methods=["post"])
 def deletereview():
     if request.method == "POST":
         users.check_csrf()
         user_id = request.form["user_id"]
         users.check_user(int(user_id))
         recipe_id = request.form["recipe_id"]
-        reviews.remove_review(user_id, recipe_id)
+        admin = request.form["admin"]
+        review_user = request.form["review_user"]
+        if admin.lower() == "true":
+            users.require_admin()
+        else:
+            users.check_user(int(review_user)) 
+        reviews.remove_review(review_user, recipe_id)
         return redirect("/recipe/"+recipe_id)
