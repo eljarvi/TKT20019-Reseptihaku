@@ -74,7 +74,7 @@ def addrecipe():
                         )
         inst = request.form["instructions"]
         priv = request.form["privacy"]
-        recipes.add_recipe(user, name, desc, time, priv, ingr, inst)
+        recipes.add_recipe(user, name, desc, time, priv, inst, ingr)
         return redirect("/myrecipes/"+str(user))
 
 @app.route("/recipe/<int:recipe_id>", methods=["get"])
@@ -88,7 +88,6 @@ def recipe(recipe_id):
         else:
             time = recipeinfo[4]
         ingr = recipes.recipe_ingredients(recipe_id)
-        inst= recipes.recipe_instructions(recipe_id)
         parameters = {
             "recipe_id" : recipe_id,
             "owner_id" : recipeinfo[1],
@@ -96,8 +95,8 @@ def recipe(recipe_id):
             "description" : recipeinfo[3],
             "time": time,
             "ingredients" : ingr,
-            "instruction" : inst,
             "priv": recipeinfo[5],
+            "instruction" : recipeinfo[6],
             "reviewed": reviews.have_reviewed(users.get_user(), recipe_id),
             "reviews": reviews.recipe_reviews(recipe_id)
         }
@@ -129,7 +128,6 @@ def modify():
         recipe_id = request.form["recipe_id"]
         recipeinfo = recipes.recipe_properties(recipe_id)
         ingr = recipes.recipe_ingredients(recipe_id)
-        inst = recipes.recipe_instructions(recipe_id)
         parameters = {
             "id": recipe_id,
             "name": recipeinfo[2],
@@ -137,7 +135,7 @@ def modify():
             "time": recipeinfo[4],
             "priv": recipeinfo[5],
             "ingredients": ingr,
-            "instructions": inst
+            "instructions": recipeinfo[6]
         }
         return render_template("modify.html", **parameters)
 
@@ -176,8 +174,7 @@ def savechanges():
         for ing in removed:
             recipes.remove_ingredient(ing)
 
-        recipes.change_recipe_properties(recipe_id, new_name, new_desc, new_time, new_priv)
-        recipes.change_recipe_instructions(recipe_id, new_inst)
+        recipes.change_recipe_properties(recipe_id, new_name, new_desc, new_time, new_priv, new_inst)
 
     return redirect("/recipe/"+recipe_id)
 

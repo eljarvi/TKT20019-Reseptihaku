@@ -12,6 +12,7 @@ CREATE TABLE Recipes (
     description TEXT,
     time INT,
     privacy BOOLEAN,
+    instruction TEXT,
     visible BOOLEAN
 );
 
@@ -20,13 +21,6 @@ CREATE TABLE Ingredients (
     recipe_id INT REFERENCES Recipes,
     name TEXT,
     quantity TEXT,
-    visible BOOLEAN
-);
-
-CREATE TABLE Instructions (
-    id SERIAL PRIMARY KEY,
-    recipe_id INT REFERENCES Recipes,
-    instruction TEXT,
     visible BOOLEAN
 );
 
