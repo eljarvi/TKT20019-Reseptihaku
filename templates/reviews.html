@@ -1,0 +1,49 @@
+{% if session.user_id != owner_id and session.user_id and not reviewed %}
+<h4>Anna arvostelu:</h4>
+<form action="/addreview" method = "post">
+    Kirjoita reseptistä vapaasti:<br>
+    <textarea name="review" rows="4" cols="20" maxlength="100"></textarea><br>
+    Arvosana: 
+    <input type="radio" name="grade" value="1">1
+    <input type="radio" name="grade" value="2">2
+    <input type="radio" name="grade" value="3">3
+    <input type="radio" name="grade" value="4">4
+    <input type="radio" name="grade" value="5">5<br>
+
+    <input type="submit" value="Jätä arvostelu">
+    <input type="hidden" name="user_id" value="{{session.user_id}}">
+    <input type = "hidden" name="recipe_id" value="{{recipe_id}}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+</form>
+{% endif %}
+
+<h3>Arvostelut:</h3>
+{% if reviews|length == 0 %}
+Reseptillä ei ole arvosteluja.
+{% endif %}
+{% for review in reviews %}
+{% if review[1] != session.user_id %}
+{{review[2]}} (arvosana: {{review[3]}})
+{% if session.user_admin %}
+<form action="/deletereview" method="post" style="display: inline;">
+    <input type="hidden" name="recipe_id" value="{{recipe_id}}">
+    <input type="hidden" name="review_user" value="{{review[1]}}">
+    <input type="hidden" name="user_id" value="{{session.user_id}}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <input type="hidden" name ="admin" value ={{session.user_admin}}>
+    <input type="submit" value="Poista">
+</form>
+{% endif %}
+{% else %}
+<b>{{review[2]}} (arvosana: {{review[3]}})</b>
+<form action="/deletereview" method="post" style="display: inline;">
+    <input type="hidden" name="recipe_id" value="{{recipe_id}}">
+    <input type="hidden" name="user_id" value="{{session.user_id}}">
+    <input type="hidden" name="review_user" value="{{session.user_id}}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <input type="hidden" name ="admin" value ={{session.user_admin}}>
+    <input type="submit" value="Poista">
+</form>
+{% endif %}
+<br>
+{% endfor %}

@@ -18,6 +18,6 @@ Ohje reseptin valmistukseen:<br>
 <input type="radio" name = "privacy" value="false"> Julkinen
 
 <input type="submit" value = "Lisää resepti">
-<input type = "hidden" name = "user_id" value = "{{session['user_id']}}">
+<input type = "hidden" name = "user_id" value = "{{session.user_id}}">
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>

@@ -181,7 +181,7 @@ def savechanges():
 @app.route("/search", methods=["post", "get"])
 def search():
     if request.method == "GET":
-        recipesinfo = [recipes.recipe_properties(x) for x in recipes.all_recipes()]
+        recipesinfo = recipes.all_recipes()
         return render_template("search.html", recipes=recipesinfo,
                                 name_search="", maxtime="", ing_search=""
                 )

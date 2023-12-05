@@ -12,63 +12,32 @@ Valmistusaika: {{time}} min<br>
 
 <p>{{instruction}}</p>
 
-{% if session["user_id"] == owner_id%}
-<form action="/delete" method = "post">
-<input type = "hidden" name = "recipe_id" value = "{{recipe_id}}">
-<input type="hidden" name = "user_id" value = "{{session['user_id']}}">
-<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-<input type="hidden" name ="admin" value ={{session.user_admin}}>
-<input type="submit" value = "Poista resepti">
-</form>
+{% if session.user_id == owner_id %}
 
 <form action="/modify" method="post">
-<input type = "hidden" name = "recipe_id" value = "{{recipe_id}}">
-<input type = "hidden" name = "user_id" value = "{{session['user_id']}}">
-<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-<input type="submit" value = "Muokkaa reseptiä">
+    <input type = "hidden" name = "recipe_id" value = "{{recipe_id}}">
+    <input type = "hidden" name = "user_id" value = "{{session.user_id}}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <input type="submit" value = "Muokkaa reseptiä">
 </form>
 
-{% elif session.user_admin %}
+{% endif %}
+
+{% if session.user_admin or session.user_id == owner_id %}
+
 <form action="/delete" method = "post">
-<input type = "hidden" name = "recipe_id" value = "{{recipe_id}}">
-<input type="hidden" name = "user_id" value = "{{session['user_id']}}">
-<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-<input type="hidden" name ="admin" value ={{session.user_admin}}>
-<input type="submit" value = "Poista resepti">
+    <input type = "hidden" name = "recipe_id" value = "{{recipe_id}}">
+    <input type="hidden" name = "user_id" value = "{{session.user_id}}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <input type="hidden" name ="admin" value ={{session.user_admin}}>
+    <input type="submit" value = "Poista resepti">
 </form>
 
 {% endif %}
 
 {% if not priv %}
 
-{% if session["user_id"] != owner_id and session["user_id"] and not reviewed %}
-{% include 'addreview.html' %}
-{% endif %}
-
-{% if reviewed %}
-Olet antanut reseptille arvostelun.<br>
-{% endif %}
-
-Arvostelut:<br>
-{% for review in reviews %}
-{% if review[1] != session["user_id"] %}
-{{review[2]}} (arvosana: {{review[3]}})
-{% if session.user_admin %}
-<form action="/deletereview" method="post" style="display: inline;">
-    <input type="hidden" name="recipe_id" value="{{recipe_id}}">
-    <input type="hidden" name="review_user" value="{{review[1]}}">
-    <input type="hidden" name="user_id" value="{{session['user_id']}}">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <input type="hidden" name ="admin" value ={{session.user_admin}}>
-    <input type="submit" value="Poista">
-</form>
-{% endif %}
-{% else %}
-<b>{{review[2]}} (arvosana: {{review[3]}})</b>
-{% include 'deletereview.html' %}
-{% endif %}
-<br>
-{% endfor %}
+{% include 'reviews.html' %}
 
 {% endif %}
 

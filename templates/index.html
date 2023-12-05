@@ -3,8 +3,8 @@
 <h2>Tervetuloa!</h2>
 <p>
 Tietokannassa on {{ recipes_count }} julkista reseptiä. 
-{% if session["user_id"] %}
-Olet kirjautunut sisään nimellä <b>{{ session["username"] }}</b>.
+{% if session.user_id %}
+Olet kirjautunut sisään nimellä <b>{{ session.username }}</b>.
 {% else %}
 Et ole kirjautunut sisään.
 {% endif %}

@@ -40,9 +40,9 @@ def users_recipes(user_id):
     return db.session.execute(text(sql), {"user_id": user_id}).fetchall()
 
 def all_recipes():
-    sql = "SELECT id FROM Recipes WHERE privacy = FALSE AND visible"
-    result = db.session.execute(text(sql)).fetchall()
-    return [row[0] for row in result]
+    sql = "SELECT id, user_id, name, description, time, privacy, \
+            instruction FROM Recipes WHERE privacy = FALSE AND visible"
+    return db.session.execute(text(sql)).fetchall()
 
 def remove_recipe(recipe_id):
     sql = "UPDATE Recipes SET visible = FALSE WHERE id = :recipe_id"
@@ -66,14 +66,6 @@ def change_recipe_properties(recipe_id, name, desc, time, priv, inst):
         "inst": inst
         }
     )
-    '''
-    sql = "UPDATE Recipes SET description = :desc WHERE id = :recipe_id"
-    db.session.execute(text(sql), {"recipe_id": recipe_id, "desc": desc})
-    sql = "UPDATE Recipes SET time = :time WHERE id = :recipe_id"
-    db.session.execute(text(sql), {"recipe_id": recipe_id, "time": time})
-    sql = "UPDATE Recipes SET privacy = :priv WHERE id = :recipe_id"
-    db.session.execute(text(sql), {"recipe_id": recipe_id, "priv": priv})
-    '''
     db.session.commit()
 
 def remove_ingredient(ingredient_id):
