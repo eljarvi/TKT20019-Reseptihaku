@@ -35,9 +35,9 @@ def recipe_ingredients(recipe_id):
     return db.session.execute(text(sql), {"recipe_id": recipe_id}).fetchall()
 
 def users_recipes(user_id):
-    sql = "SELECT id FROM Recipes WHERE user_id = :user_id AND visible"
-    result = db.session.execute(text(sql), {"user_id": user_id}).fetchall()
-    return [row[0] for row in result]
+    sql = "SELECT id, user_id, name, description, time, privacy, \
+            instruction FROM Recipes WHERE user_id = :user_id AND visible"
+    return db.session.execute(text(sql), {"user_id": user_id}).fetchall()
 
 def all_recipes():
     sql = "SELECT id FROM Recipes WHERE privacy = FALSE AND visible"
