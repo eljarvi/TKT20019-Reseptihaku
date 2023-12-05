@@ -6,18 +6,15 @@ Sovelluksen ominaisuuksia:
 - Käyttäjä pystyy lisäämään uuden reseptin, josta tallennetaan mm. tarvittavat raaka-aineet, valmistus-aika, valmistusohje sekä tieto siitä, onko resepti yksityinen, eli saavatko muut käyttäjät nähdä sen.
 - Käyttäjä pystyy tarkastelemaan omia reseptejään ja muokkaamaan niitä, esimerkiksi poistamaan tietyn raaka-aineen.
 - Käyttäjä pystyy poistamaan omia reseptejään.
-- Käyttäjä pystyy etsimään reseptejä esimerkiksi yksittäisten raaka-aineiden perusteella sekä omiensa, että muiden julkisten reseptien joukosta.
-- Käyttäjä pystyy antamaan arvosteluja omille sekä muiden julkisille resepteille, sekä tarkastelemaan reseptiensä saamia arvosteluja.
-- Ylläpitäjäkäyttäjä pystyy poistamaan reseptejä, jotka ovat jollain tavalla sopimattomia.
-
-Tällä hetkellä:
-- Käyttäjä voi luoda tunnuksen ja kirjautua sisään ja ulos, mutta salasanoja ei tallenneta tietokantaan tietoturvallisesti.
-- Käyttäjä voi lisätä uuden reseptin
-- Käyttäjä näkee omat reseptinsä listana ja voi poistaa niitä
-- Käyttäjä voi muokata reseptejä, mutta raaka-aineen poistaminen ei vielä toimi ja vajaat syötteet aiheuttavat virheitä.
+- Käyttäjä pystyy etsimään julkisia reseptejä yksittäisten raaka-aineiden, maksimivalmistusajan ja nimen perusteella.
+- Käyttäjä pystyy antamaan arvosteluja julkisille resepteille, 1 arvostelu/resepti, sekä poistamaan antamansa arvostelun.
+- Arvostelut eivät poistu, vaikka reseptistä muokattaisiin yksityinen, ne vain piilotetaan.
+- Ylläpitäjäkäyttäjä pystyy poistamaan reseptejä ja arvosteluja.
+HUOM.
+Ylläpitäjäoikeuksia ei voi antaa sovelluksessa, vaan tämä täytyy tehdä suoraan tietokantaan esim. komennolla UPDATE Users SET admin = TRUE WHERE id = (käyttäjän id);
 
 Ohje käynnistämiseen paikallisesti:
-Kopio tämä repositorio koneellesi ja siirry sen juurikansioon. Luo kansioon .env-niminen tiedosto ja määritä sen sisältö seuraavanalaiseksi: 
+Kopioi tämä repositorio koneellesi ja siirry sen juurikansioon. Luo kansioon .env-niminen tiedosto ja määritä sen sisältö seuraavanalaiseksi: 
 
 - DATABASE_URL= tietokannan-paikallinen-osoite
 - SECRET_KEY= salainen-avain
