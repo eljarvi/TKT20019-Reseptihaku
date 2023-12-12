@@ -4,11 +4,13 @@
     Kirjoita reseptistä vapaasti:<br>
     <textarea name="review" rows="4" cols="20" maxlength="100"></textarea><br>
     Arvosana: 
-    <input type="radio" name="grade" value="1">1
-    <input type="radio" name="grade" value="2">2
-    <input type="radio" name="grade" value="3">3
-    <input type="radio" name="grade" value="4">4
-    <input type="radio" name="grade" value="5">5<br>
+    <select name="grade" required>
+    <option value="1">1
+    <option value="2">2
+    <option value="3">3
+    <option value="4">4
+    <option value="5">5
+    </select><br>
 
     <input type="submit" value="Jätä arvostelu">
     <input type="hidden" name="user_id" value="{{session.user_id}}">

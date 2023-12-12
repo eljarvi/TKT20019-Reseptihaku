@@ -17,22 +17,25 @@ def login():
         password = request.form["password"]
         if users.login(user, password):
             return redirect("/")
-        return render_template("login.html")
+        return render_template("error.html", message="Salasana tai käyttäjätunnus virheellinen.")
 
 @app.route("/register", methods=['post', 'get'])
 def register():
     if request.method == "GET":
         return render_template("register.html")
     if request.method == "POST":
-        username = request.form["username"]
+        username = request.form["username"].strip()
         if len(username) < 1 or len(username) >20:
-            return render_template("error.html", message="Tunnuksessa tulee olla 1-20 merkkiä")
-        password = request.form["password"]
+            return render_template("error.html", message="Tunnuksessa tulee olla 1-20 merkkiä. "+
+                                                        "Välilyöntejä ei lasketa merkeiksi.")
+        password = request.form["password"].strip()
         if len(password) < 5 or len(password)>50:
-            return render_template("error.html", message="Salasanassa tulee olla 5-50 merkkiä")
+            return render_template("error.html", message="Salasanassa tulee olla 5-50 merkkiä. " +
+                                                        "Välilyöntejä ei lasketa merkeiksi.")
         if users.register(username, password):
             return redirect("/")
-        return render_template("error.html", message="Rekisteröinti ei onnistunut")
+        return render_template("error.html", message="Rekisteröinti ei onnistunut. " +
+                                                    "Kokeile toista käyttäjänimeä.")
 
 @app.route("/logout")
 def logout():
@@ -54,9 +57,10 @@ def addrecipe():
         users.check_csrf()
         user = request.form["user_id"]
         users.check_user(int(user))
-        name = request.form["name"]
+        name = request.form["name"].strip()
         if len(name) <1 or len(name) > 50:
-            return render_template("error.html", message = "Nimen tulee olla 1-50 merkkiä.")
+            return render_template("error.html", message = "Nimen tulee olla 1-50 merkkiä."+
+                                                        "Välilyöntejä ei lasketa merkeiksi.")
         time = request.form["time"]
         if not time.isdigit() or time == 0:
             time = -1
@@ -148,7 +152,8 @@ def savechanges():
         users.check_user(owner_id)
         new_name = request.form["name"].strip()
         if len(new_name) < 1 or len(new_name) > 50:
-            return render_template("error.html", message = "Nimen tulee olla 1-50 merkkiä.")
+            return render_template("error.html", message = "Nimen tulee olla 1-50 merkkiä."+
+                                                        "Välilyöntejä ei lasketa merkeiksi.")
         new_desc = request.form["description"].strip()
         new_time = request.form["time"]
         if not new_time.isdigit():

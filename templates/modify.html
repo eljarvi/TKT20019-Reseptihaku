@@ -25,8 +25,13 @@ Muuta ohjeita:<br>
 {{instructions}} 
 </textarea><br>
 
+{% if priv %}
 <input type = "radio" name = "privacy" value="true" checked="checked"> Yksityinen
 <input type="radio" name = "privacy" value="false"> Julkinen<br>
+{% else %}
+<input type = "radio" name = "privacy" value="true"> Yksityinen
+<input type="radio" name = "privacy" value="false" checked> Julkinen<br>
+{% endif %}
 
 <input type = "hidden" name = "recipe_id" value = "{{id}}">
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
