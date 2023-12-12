@@ -6,7 +6,7 @@ import reviews
 
 @app.route("/")
 def index():
-    return render_template("index.html", recipes_count = len(recipes.all_recipes()))
+    return render_template("index.html", recipes_count=len(recipes.all_recipes()))
 
 @app.route("/login", methods=['post', 'get'])
 def login():
@@ -59,7 +59,7 @@ def addrecipe():
         users.check_user(int(user))
         name = request.form["name"].strip()
         if len(name) <1 or len(name) > 50:
-            return render_template("error.html", message = "Nimen tulee olla 1-50 merkkiä."+
+            return render_template("error.html", message="Nimen tulee olla 1-50 merkkiä."+
                                                         "Välilyöntejä ei lasketa merkeiksi.")
         time = request.form["time"]
         if not time.isdigit() or time == 0:
@@ -71,7 +71,7 @@ def addrecipe():
             if len(parts) != 2 or parts[0].strip() == "":
                 return render_template(
                         "error.html",
-                         message = "Raaka-aineet on syötettävä omille " +
+                         message="Raaka-aineet on syötettävä omille " +
                                 "riveilleen muodossa raaka-aine;määrä.\n" +
                                 "Jos et halua lisätä määrää kirjoita muodossa raaka-aine; . " +
                                 "Raaka-ainekenttä ei voi olla tyhjä."
@@ -152,7 +152,7 @@ def savechanges():
         users.check_user(owner_id)
         new_name = request.form["name"].strip()
         if len(new_name) < 1 or len(new_name) > 50:
-            return render_template("error.html", message = "Nimen tulee olla 1-50 merkkiä."+
+            return render_template("error.html", message="Nimen tulee olla 1-50 merkkiä."+
                                                         "Välilyöntejä ei lasketa merkeiksi.")
         new_desc = request.form["description"].strip()
         new_time = request.form["time"]
@@ -170,7 +170,7 @@ def savechanges():
                 else:
                     return render_template(
                         "error.html",
-                        message = "Raaka-aineet on syötettävä omille" +
+                        message="Raaka-aineet on syötettävä omille" +
                                     "riveilleen muodossa raaka-aine;määrä.\n" +
                                     "Jos et halua lisätä määrää kirjoita muodossa raaka-aine; ."
                             )
