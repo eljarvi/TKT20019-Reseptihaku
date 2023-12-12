@@ -1,12 +1,20 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
 {% include 'header.html' %}
 
-<h2>{{name}}</h2>
+<div class="recipe">
+<h1>{{name}}</h1>
 {{description}}<br>
-Valmistusaika: {{time}} min<br>
-<h4>Raaka-aineet:</h4>
+<b>Valmistusaika:</b> {{time}} min<br>
+<h3>Raaka-aineet:</h3>
 <ul>
 {% for ingredient in ingredients %}
+{% if ingredient[1] == "" %}
+<li>{{ingredient[0]}}</li>
+{% else %}
 <li>{{ingredient[0]}}  ({{ingredient[1]}})</li>
+{% endif %}
 {% endfor %}
 </ul>
 
@@ -41,3 +49,6 @@ Valmistusaika: {{time}} min<br>
 
 {% endif %}
 
+{% endblock %}
+</div>
+</div>

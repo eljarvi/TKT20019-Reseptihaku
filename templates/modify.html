@@ -1,12 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
 {% include 'header.html' %}
 
+<div class="recipe">
 <h2>Muokkaa reseptiä: {{name}}</h2>
 <form action="/savechanges" method="post">
 Uusi nimi:<input type="text" name = "name" value="{{name}}" minlength="1" maxlength="50"><br>
 Valmistusaika:<input type="number" name = "time" value="{{time}}"> min<br>
 Kuvaus:<input type="text" name = "description" value="{{desc}}" maxlength="100"><br>
 
-Lisää raaka-aineita: (Kirjoita raaka-aineet omille riveilleen muodossa: raaka-aine;määrä)<br>
+Lisää raaka-aineita (Kirjoita raaka-aineet omille riveilleen muodossa: raaka-aine;määrä):<br>
 <textarea name = "ingredients" rows = "6", cols = "30", maxlength="1000"></textarea><br>
 
 Poista raaka-aine:<br>
@@ -22,9 +26,13 @@ Muuta ohjeita:<br>
 </textarea><br>
 
 <input type = "radio" name = "privacy" value="true" checked="checked"> Yksityinen
-<input type="radio" name = "privacy" value="false"> Julkinen
+<input type="radio" name = "privacy" value="false"> Julkinen<br>
 
 <input type = "hidden" name = "recipe_id" value = "{{id}}">
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input type="submit" value="Tallenna">
 </form>
+
+{% endblock %}
+</div>
+</div>

@@ -1,6 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
 {% include 'header.html' %}
 
-<h2>Kirjaudu</h2>
+<div class="content">
+<h2>Kirjaudu:</h2>
 
 <form action = "/login" method="post">
 Käyttäjänimi: <input type = "text" name = "username"><br>
@@ -9,3 +13,7 @@ Salasana: <input type = "password" name = "password"><br>
 </form>
 
 <a href="/register">Rekisteröidy</a>
+
+{% endblock%}
+</div>
+</div>

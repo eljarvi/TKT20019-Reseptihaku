@@ -1,5 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="container">
 {% include 'header.html' %}
 
+<div class="content">
 <h2>Tervetuloa!</h2>
 <p>
 Tietokannassa on {{ recipes_count }} julkista reseptiä. 
@@ -9,3 +14,7 @@ Olet kirjautunut sisään nimellä <b>{{ session.username }}</b>.
 Et ole kirjautunut sisään.
 {% endif %}
 </p>
+
+{% endblock%}
+</div>
+</div>
