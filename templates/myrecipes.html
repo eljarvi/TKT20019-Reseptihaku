@@ -5,6 +5,9 @@
 
 <div class="content">
 <h2>Reseptisi, {{session.username}}:</h2>
+{% if recipes|length == 0 %}
+Sinulla ei ole omia reseptejä.
+{% endif %}
 <ul>
 {% for recipe in recipes %}
 <li><a href="/recipe/{{recipe[0]}}">{{recipe[2]}}</a></li>
