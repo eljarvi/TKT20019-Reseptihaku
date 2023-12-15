@@ -47,7 +47,9 @@ def logout():
 def myrecipes(user_id):
     users.check_user(user_id)
     user_recipes = recipes.users_recipes(user_id)
-    return render_template("myrecipes.html", recipes=user_recipes)
+    fav_ids = favourites.user_favourites(user_id)
+    favs = [recipes.recipe_properties(id) for id in fav_ids]
+    return render_template("myrecipes.html", recipes=user_recipes, favourites=favs)
 
 @app.route("/addrecipe", methods=["post", "get"])
 def add_recipe():
@@ -120,10 +122,10 @@ def delete():
         recipe_id = request.form["recipe_id"]
         recipes.remove_recipe(recipe_id)
         reviews.remove_reviews(recipe_id)
+        favourites.remove_favourites(recipe_id)
         if admin.lower() == "true":
             return redirect("/search")
         return redirect("/myrecipes/"+user_id)
-
 
 @app.route("/modify", methods=["post"])
 def modify():

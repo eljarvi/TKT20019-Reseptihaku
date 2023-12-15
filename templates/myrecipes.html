@@ -10,7 +10,14 @@
 <li><a href="/recipe/{{recipe[0]}}">{{recipe[2]}}</a></li>
 {% endfor %}
 </ul>
-{% endblock %}
+
+<h3>Julkiset reseptit, jotka ovat suosikkejasi:</h3>
+<ul>
+{% for recipe in favourites %}
+<li><a href="/recipe/{{recipe[0]}}">{{recipe[2]}}</a></li>
+{% endfor %}
+</ul>
 
 </div>
 </div>
+{% endblock %}
