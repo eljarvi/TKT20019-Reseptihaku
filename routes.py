@@ -29,11 +29,14 @@ def register():
         if len(username) < 1 or len(username) >20:
             return render_template("error.html", message="Tunnuksessa tulee olla 1-20 merkkiä. "+
                                                         "Välilyöntejä ei lasketa merkeiksi.")
-        password = request.form["password"].strip()
-        if len(password) < 5 or len(password)>50:
+        password1 = request.form["password1"].strip()
+        password2 = request.form["password2"].strip()
+        if len(password1) < 5 or len(password1)>50:
             return render_template("error.html", message="Salasanassa tulee olla 5-50 merkkiä. " +
                                                         "Välilyöntejä ei lasketa merkeiksi.")
-        if users.register(username, password):
+        if password1 != password2:
+            return render_template("error.html", message="Salasanat eroavat.")
+        if users.register(username, password1):
             return redirect("/")
         return render_template("error.html", message="Rekisteröinti ei onnistunut. " +
                                                     "Kokeile toista käyttäjänimeä.")
