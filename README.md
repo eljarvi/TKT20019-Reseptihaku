@@ -1,5 +1,5 @@
 Sovellus on tarkoitettu omien lempi(ruoka)reseptien tallentamiseen ja muokkaamiseen, sekä muiden käyttäjien lisäämien reseptien tarkastelemiseen. Käyttäjä pystyy tallentamaan hyväksi havaitsemansa reseptin tiedot sovelluksen tietokantaan,
-muokkaamaan niitä, sekä etsimään sopivia reseptejä sekä omiensa että muiden tallentamien reseptien joukosta. 
+muokkaamaan niitä, sekä etsimään sopivia reseptejä hakutoiminnolla. 
 
 Sovelluksen ominaisuuksia:
 - Käyttäjä voi kirjautua sisään ja ulos, sekä luoda tunnuksen.
@@ -9,6 +9,7 @@ Sovelluksen ominaisuuksia:
 - Käyttäjä pystyy etsimään julkisia reseptejä yksittäisten raaka-aineiden, maksimivalmistusajan ja nimen perusteella.
 - Käyttäjä pystyy antamaan arvosteluja julkisille resepteille, 1 arvostelu/resepti, sekä poistamaan antamansa arvostelun.
 - Arvostelut eivät poistu, vaikka reseptistä muokattaisiin yksityinen, ne vain piilotetaan.
+- Käyttäjä pystyy tallentamaan muiden julkisia reseptejä suosikeikseen.
 - Ylläpitäjäkäyttäjä pystyy poistamaan reseptejä ja arvosteluja.
 HUOM.
 Ylläpitäjäoikeuksia ei voi antaa sovelluksessa, vaan tämä täytyy tehdä suoraan tietokantaan esim. komennolla UPDATE Users SET admin = TRUE WHERE id = (käyttäjän id);
