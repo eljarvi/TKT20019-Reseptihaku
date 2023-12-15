@@ -3,6 +3,7 @@ from app import app
 import recipes
 import users
 import reviews
+import favourites
 
 @app.route("/")
 def index():
@@ -49,7 +50,7 @@ def myrecipes(user_id):
     return render_template("myrecipes.html", recipes=user_recipes)
 
 @app.route("/addrecipe", methods=["post", "get"])
-def addrecipe():
+def add_recipe():
     if request.method == "GET":
         users.require_login()
         return render_template("addrecipe.html")
@@ -102,7 +103,8 @@ def recipe(recipe_id):
             "priv": recipeinfo[5],
             "instruction" : recipeinfo[6],
             "reviewed": reviews.have_reviewed(users.get_user(), recipe_id),
-            "reviews": reviews.recipe_reviews(recipe_id)
+            "reviews": reviews.recipe_reviews(recipe_id),
+            "not_favourite": favourites.not_favourite(users.get_user(), recipe_id)
         }
         return render_template("recipe.html", **parameters)
 
@@ -144,7 +146,7 @@ def modify():
         return render_template("modify.html", **parameters)
 
 @app.route("/savechanges", methods=["post"])
-def savechanges():
+def save_changes():
     if request.method == "POST":
         users.check_csrf()
         recipe_id = request.form["recipe_id"]
@@ -208,7 +210,7 @@ def search():
                 )
 
 @app.route("/addreview", methods=["post"])
-def addreview():
+def add_review():
     users.require_login()
     if request.method == "POST":
         users.check_csrf()  
@@ -223,9 +225,8 @@ def addreview():
         reviews.add_review(user_id, recipe_id, review, grade)
         return redirect("/recipe/"+recipe_id)
 
-
 @app.route("/deletereview", methods=["post"])
-def deletereview():
+def delete_review():
     if request.method == "POST":
         users.check_csrf()
         user_id = request.form["user_id"]
@@ -239,3 +240,29 @@ def deletereview():
             users.check_user(int(review_user)) 
         reviews.remove_review(review_user, recipe_id)
         return redirect("/recipe/"+recipe_id)
+
+@app.route("/addfavourite", methods=["post"])
+def add_favourite():
+    if request.method == "POST":
+        users.check_csrf()
+        user_id = request.form["user_id"]
+        users.check_user(int(user_id))
+        recipe_id = request.form["recipe_id"]
+        recipeinfo = recipes.recipe_properties(recipe_id)
+        if recipeinfo[5]: #if the recipe is private
+            users.check_user(int(recipeinfo[1])) # check if the user is the recipe's owner
+        if favourites.not_favourite(user_id, recipe_id):
+            favourites.add_favourite(user_id, recipe_id)
+        return redirect("/recipe/"+recipe_id)
+
+@app.route("/deletefavourite", methods=["post"])
+def delete_favourite():
+    if request.method == "POST":
+        users.check_csrf()
+        user_id = request.form["user_id"]
+        users.check_user(int(user_id))
+        recipe_id = request.form["recipe_id"]
+        favourites.remove_favourite(user_id, recipe_id)
+        return redirect("/recipe/"+recipe_id)
+
+        
