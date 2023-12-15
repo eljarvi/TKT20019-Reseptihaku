@@ -111,7 +111,6 @@ def recipe(recipe_id):
             "reviews": reviews.recipe_reviews(recipe_id),
             "not_favourite": favourites.not_favourite(users.get_user(), recipe_id)
         }
-        print(parameters["not_favourite"])
         return render_template("recipe.html", **parameters)
 
 @app.route("/delete", methods=["post"])
@@ -270,5 +269,3 @@ def delete_favourite():
         recipe_id = request.form["recipe_id"]
         favourites.remove_favourite(user_id, recipe_id)
         return redirect("/recipe/"+recipe_id)
-
-        

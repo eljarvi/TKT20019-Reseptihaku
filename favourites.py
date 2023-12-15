@@ -36,5 +36,3 @@ def not_favourite(user_id, recipe_id):
                     {"user_id": user_id, "recipe_id": recipe_id}
                 ).fetchone()[0]
     return result == 0
-
-

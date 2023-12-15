@@ -47,7 +47,7 @@
 
 {% endif %}
 
-{% if session.user_id and (not priv or session.user_id == owner_id) and not_favourite %}
+{% if session.user_id and not priv and session.user_id != owner_id and not_favourite %}
 <form action="/addfavourite" method="post">
     <input type="hidden" name = "recipe_id" value = "{{recipe_id}}">
     <input type="hidden" name="user_id" value="{{session.user_id}}">
