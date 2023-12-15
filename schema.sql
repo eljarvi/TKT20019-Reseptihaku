@@ -32,3 +32,10 @@ CREATE TABLE Reviews (
     grade INT,
     visible BOOLEAN
 );
+
+CREATE TABLE Favourites (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES Users,
+    recipe_id INT REFERENCES Recipes,
+    visible BOOLEAN
+);
