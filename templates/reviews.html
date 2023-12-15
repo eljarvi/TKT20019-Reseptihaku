@@ -15,7 +15,7 @@
     <input type="submit" value="Jätä arvostelu">
     <input type="hidden" name="user_id" value="{{session.user_id}}">
     <input type = "hidden" name="recipe_id" value="{{recipe_id}}">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
 </form>
 {% endif %}
 
@@ -23,21 +23,22 @@
 {% if reviews|length == 0 %}
 Reseptillä ei ole arvosteluja.
 {% endif %}
+</ul>
 {% for review in reviews %}
 {% if review[1] != session.user_id %}
-{{review[2]}} (arvosana: {{review[3]}})
+<li>{{review[2]}} (arvosana: {{review[3]}})
 {% if session.user_admin %}
 <form action="/deletereview" method="post" style="display: inline;">
     <input type="hidden" name="recipe_id" value="{{recipe_id}}">
     <input type="hidden" name="review_user" value="{{review[1]}}">
     <input type="hidden" name="user_id" value="{{session.user_id}}">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
     <input type="hidden" name ="admin" value ={{session.user_admin}}>
     <input type="submit" value="Poista">
-</form>
+</form></li>
 {% endif %}
 {% else %}
-<b>{{review[2]}} (arvosana: {{review[3]}})</b>
+<li><b>{{review[2]}} (arvosana: {{review[3]}})</b>
 <form action="/deletereview" method="post" style="display: inline;">
     <input type="hidden" name="recipe_id" value="{{recipe_id}}">
     <input type="hidden" name="user_id" value="{{session.user_id}}">
@@ -45,7 +46,7 @@ Reseptillä ei ole arvosteluja.
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="hidden" name ="admin" value ={{session.user_admin}}>
     <input type="submit" value="Poista">
-</form>
+</form></li>
 {% endif %}
-<br>
 {% endfor %}
+</ul>

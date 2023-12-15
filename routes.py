@@ -77,8 +77,8 @@ def add_recipe():
             if len(parts) != 2 or parts[0].strip() == "":
                 return render_template(
                         "error.html",
-                         message="Raaka-aineet on syötettävä omille " +
-                                "riveilleen muodossa raaka-aine;määrä.\n" +
+                         message="Raaka-aineet on syötettävä muodossa "+
+                                "raaka-aine;määrä ja erotettava rivinvaihdolla.\n" +
                                 "Jos et halua lisätä määrää kirjoita muodossa raaka-aine; . " +
                                 "Raaka-ainekenttä ei voi olla tyhjä."
                         )

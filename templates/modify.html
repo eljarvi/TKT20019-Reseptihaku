@@ -6,11 +6,11 @@
 <div class="recipe">
 <h2>Muokkaa reseptiä: {{name}}</h2>
 <form action="/savechanges" method="post">
-Uusi nimi:<input type="text" name = "name" value="{{name}}" minlength="1" maxlength="50"><br>
-Valmistusaika:<input type="number" name = "time" value="{{time}}"> min<br>
-Kuvaus:<input type="text" name = "description" value="{{desc}}" maxlength="100"><br>
+Uusi nimi:<br><input type="text" name = "name" value="{{name}}" minlength="1" maxlength="50"><br>
+Valmistusaika:<br><input type="number" name = "time" value="{{time}}"> min<br>
+Kuvaus:<br><input type="text" name = "description" value="{{desc}}" maxlength="100"><br>
 
-Lisää raaka-aineita (Kirjoita raaka-aineet omille riveilleen muodossa: raaka-aine;määrä):<br>
+Lisää raaka-aineita (Kirjoita raaka-aineet muodossa: raaka-aine;määrä ja erota rivinvaihdolla):<br>
 <textarea name = "ingredients" rows = "6", cols = "30", maxlength="1000"></textarea><br>
 
 Poista raaka-aine:<br>
